@@ -564,7 +564,50 @@
         </div>
     </section>
 
-    <!-- Depoimentos (estáticos, mas podem ser dinâmicos futuramente) -->
+ 
+    <!-- Galeria -->
+    <section id="galeria" class="gallery">
+        <div class="container">
+            <div class="section-header centered">
+                <span class="section-label">Momentos</span>
+                <h2 class="section-title">Galeria</h2>
+            </div>
+            <div class="gallery-wrapper">
+                <button class="scroll-btn left" id="galleryScrollLeft" aria-label="Anterior"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+                <div class="gallery-grid" id="galleryGrid"></div>
+                <button class="scroll-btn right" id="galleryScrollRight" aria-label="Próximo"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notícias -->
+    <section id="noticias" class="news">
+        <div class="container">
+            <div class="section-header centered">
+                <span class="section-label">Actualidades</span>
+                <h2 class="section-title">Notícias</h2>
+            </div>
+            <div class="news-grid" id="newsGrid"></div>
+        </div>
+    </section>
+
+    <!-- Modal Notícia -->
+    <div class="news-modal" id="newsModal">
+        <div class="news-modal-overlay"></div>
+        <div class="news-modal-content">
+            <button class="news-modal-close" id="newsModalClose">&times;</button>
+            <div class="news-modal-body">
+                <h2 class="news-modal-title"></h2>
+                <div class="news-modal-meta">
+                    <span class="news-modal-date"></span>
+                    <span class="news-modal-category"></span>
+                </div>
+                <div class="news-modal-image"></div>
+                <div class="news-modal-text"></div>
+            </div>
+        </div>
+    </div>
+       <!-- Depoimentos (estáticos, mas podem ser dinâmicos futuramente) -->
     <section class="testimonials">
         <div class="container">
             <div class="section-header centered">
@@ -608,48 +651,6 @@
         </div>
     </section>
 
-    <!-- Galeria -->
-    <section id="galeria" class="gallery">
-        <div class="container">
-            <div class="section-header centered">
-                <span class="section-label">Momentos</span>
-                <h2 class="section-title">Galeria</h2>
-            </div>
-            <div class="gallery-wrapper">
-                <button class="scroll-btn left" id="galleryScrollLeft" aria-label="Anterior"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
-                <div class="gallery-grid" id="galleryGrid"></div>
-                <button class="scroll-btn right" id="galleryScrollRight" aria-label="Próximo"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Notícias -->
-    <section id="noticias" class="news">
-        <div class="container">
-            <div class="section-header centered">
-                <span class="section-label">Actualidades</span>
-                <h2 class="section-title">Notícias</h2>
-            </div>
-            <div class="news-grid" id="newsGrid"></div>
-        </div>
-    </section>
-
-    <!-- Modal Notícia -->
-    <div class="news-modal" id="newsModal">
-        <div class="news-modal-overlay"></div>
-        <div class="news-modal-content">
-            <button class="news-modal-close" id="newsModalClose">&times;</button>
-            <div class="news-modal-body">
-                <h2 class="news-modal-title"></h2>
-                <div class="news-modal-meta">
-                    <span class="news-modal-date"></span>
-                    <span class="news-modal-category"></span>
-                </div>
-                <div class="news-modal-image"></div>
-                <div class="news-modal-text"></div>
-            </div>
-        </div>
-    </div>
 
     <!-- Contacto -->
     <section id="contacto" class="contact">
