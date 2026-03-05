@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="9WdqmkTsfKU8Bp-x7Cb_tBaxqnyCovLGpY55BzdYHKE" />
+    <meta name="description" content="Site oficial da Escola de Futebol Bengala. Notícias, jogadores, eventos e atividades desportivas em Nampula." />
+    <title>Escola de Futebol Bengala</title>
+    <!-- Fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;700;900&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* ===== VARIÁVEIS GLOBAIS ===== */
+        :root {
+            --primary: #ffffff;
+            --primary-light: #f0f8ff;
+            --primary-dark: #000000;
+            --accent: #6ab0de;
+            --accent-light: #a0d0f0;
+            --text-primary: #000000;
+            --text-secondary: #333333;
+            --text-light: #666666;
+            --background: #ffffff;
+            --background-light: #f5f5f5;
+            --border: #dddddd;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-strong: rgba(0, 0, 0, 0.2);
+            --font-display: 'Bitter', serif;
+            --font-body: 'Work Sans', sans-serif;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 4rem;
+            --spacing-xl: 6rem;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; overflow-x:hidden; }
+        body { font-family:var(--font-body); font-size:16px; line-height:1.7; color:var(--text-primary); background-color:var(--background); overflow-x:hidden; }
+        h1,h2,h3,h4,h5,h6 { font-family:var(--font-display); line-height:1.2; font-weight:700; }
+        h1 { font-size:clamp(2.5rem,6vw,5rem); }
+        h2 { font-size:clamp(2rem,4vw,3.5rem); }
+        h3 { font-size:clamp(1.5rem,3vw,2rem); }
+        h4 { font-size:clamp(1.25rem,2.5vw,1.75rem); }
+        p { margin-bottom:1rem; }
+        a { text-decoration:none; color:inherit; transition:var(--transition); }
+        img { max-width:100%; height:auto; display:block; }
+        .container { max-width:1200px; margin:0 auto; padding:0 var(--spacing-md); }
+
+        .section-header { margin-bottom:var(--spacing-lg); }
+        .section-header.centered { text-align:center; }
+        .section-label { display:inline-block; font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:2px; color:var(--accent); margin-bottom:var(--spacing-sm); }
+        .section-title { color:var(--primary-dark); margin-bottom:var(--spacing-sm); }
+        .section-subtitle { color:var(--text-light); font-size:1.1rem; margin-top:-0.5rem; }
+
+        /* NAVEGAÇÃO */
+        .navbar {
+            position:fixed; top:0; left:0; right:0; background:rgba(255,255,255,0.95); backdrop-filter:blur(10px);
+            z-index:1000; border-bottom:1px solid var(--border); transition:var(--transition);
+        }
+        .navbar.scrolled { box-shadow:0 4px 20px var(--shadow); }
+        .nav-container { max-width:1400px; margin:0 auto; padding:0 var(--spacing-md); display:flex; justify-content:space-between; align-items:center; height:80px; }
+        .nav-logo img { height:60px; width:auto; }
+        .nav-menu { display:flex; list-style:none; gap:var(--spacing-md); align-items:center; }
+        .nav-link { color:var(--text-primary); font-weight:500; font-size:0.95rem; letter-spacing:0.3px; position:relative; padding:0.5rem 0; }
+        .nav-link::after { content:''; position:absolute; bottom:0; left:0; width:0; height:2px; background:var(--accent); transition:var(--transition); }
+        .nav-link:hover::after, .nav-link.active::after { width:100%; }
+        .nav-toggle { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:10px; }
+        .nav-toggle span { width:25px; height:2px; background:var(--primary-dark); transition:var(--transition); }
+
+        /* HERO */
+        .hero {
+            height:100vh; position:relative; display:flex; align-items:center; justify-content:center;
+            overflow:hidden; margin-top:80px;
+        }
+        .hero-background {
+            position:absolute; inset:0; background-image:url('static/Clube.png');
+            background-repeat:no-repeat; background-position:center; background-size:cover; z-index:0;
+        }
+        .hero-content { position:relative; z-index:2; text-align:center; color:white; max-width:900px; padding:var(--spacing-md); animation:fadeInUp 1s ease-out; }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(40px);} to{opacity:1;transform:translateY(0);} }
+        .hero-title { font-size:clamp(3rem,8vw,6rem); font-weight:900; margin-bottom:var(--spacing-sm); letter-spacing:-2px; text-transform:uppercase; }
+        .hero-subtitle { font-size:clamp(1.1rem,2vw,1.5rem); font-weight:300; margin-bottom:var(--spacing-lg); opacity:0.9; }
+        .hero-cta { animation:fadeInUp 1s ease-out 0.6s both; }
+        .scroll-indicator { position:absolute; bottom:40px; left:50%; transform:translateX(-50%); z-index:2; }
+        .scroll-line { width:2px; height:60px; background:rgba(255,255,255,0.3); position:relative; animation:scrollPulse 2s ease-in-out infinite; }
+        .scroll-line::after { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:6px; height:6px; background:white; border-radius:50%; animation:scrollDot 2s ease-in-out infinite; }
+        @keyframes scrollPulse { 0%,100%{opacity:0.3;} 50%{opacity:1;} }
+        @keyframes scrollDot { 0%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(40px);} 100%{transform:translateX(-50%) translateY(0);} }
+
+        /* BOTÕES */
+        .btn {
+            display:inline-block; padding:1rem 2.5rem; font-weight:600; font-size:1rem; border-radius:50px;
+            transition:var(--transition); cursor:pointer; border:2px solid transparent; text-align:center;
+        }
+        .btn-primary { background:var(--accent); color:var(--primary-dark); border-color:var(--accent); }
+        .btn-primary:hover { background:var(--accent-light); border-color:var(--accent-light); transform:translateY(-2px); box-shadow:0 10px 30px rgba(106,176,222,0.3); }
+        .btn-secondary { background:transparent; color:var(--primary-dark); border-color:var(--primary-dark); }
+        .btn-secondary:hover { background:var(--primary-dark); color:white; transform:translateY(-2px); box-shadow:0 10px 30px var(--shadow); }
+
+        /* ATIVIDADES RECENTES */
+        .latest-activities { padding:var(--spacing-xl) 0; background:var(--background-light); }
+        .activities-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:var(--spacing-md); }
+        .activity-card { background:white; border-radius:12px; overflow:hidden; box-shadow:0 4px 20px var(--shadow); transition:var(--transition); }
+        .activity-card:hover { transform:translateY(-8px); box-shadow:0 12px 40px var(--shadow-strong); }
+        .activity-image { position:relative; padding-bottom:60%; background:var(--border); }
+        .activity-placeholder { position:absolute; inset:0; background-size:contain; background-position:center; background-repeat:no-repeat; background-color:var(--accent-light); }
+        .activity-badge { position:absolute; top:1rem; right:1rem; padding:0.5rem 1rem; background:rgba(0,0,0,0.7); color:white; font-size:0.75rem; font-weight:600; text-transform:uppercase; border-radius:20px; }
+        .activity-badge.badge-upcoming { background:var(--accent); color:var(--primary-dark); }
+        .activity-content { padding:var(--spacing-md); }
+        .activity-date { display:block; font-size:0.85rem; color:var(--text-light); margin-bottom:0.5rem; }
+        .activity-title { font-size:1.4rem; color:var(--primary-dark); margin-bottom:var(--spacing-sm); }
+        .activity-description { color:var(--text-secondary); line-height:1.6; }
+
+        /* SOBRE */
+        .about { padding:var(--spacing-xl) 0; }
+        .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--spacing-lg); align-items:center; margin-bottom:var(--spacing-xl); }
+        .about-text p { font-size:1.1rem; color:var(--text-secondary); line-height:1.8; }
+        .about-image { position:relative; padding-bottom:75%; border-radius:20px; overflow:hidden; }
+        .about-placeholder { position:absolute; inset:0; background-size:contain; background-position:center; background-repeat:no-repeat; background-color:var(--accent-light); }
+        /* MVV */
+        .mvv-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:var(--spacing-md); margin-bottom:var(--spacing-xl); }
+        .mvv-card { background:var(--background-light); padding:var(--spacing-lg); border-radius:16px; transition:var(--transition); }
+        .mvv-card:hover { background:white; box-shadow:0 8px 30px var(--shadow); transform:translateY(-4px); }
+        .mvv-icon { width:60px; height:60px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:var(--spacing-md); color:var(--primary-dark); }
+        .mvv-icon svg { width:32px; height:32px; }
+        /* Equipa */
+        .team-section { margin-bottom:var(--spacing-xl); }
+        .subsection-title { font-size:2rem; color:var(--primary-dark); margin-bottom:var(--spacing-md); text-align:center; }
+        .team-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:var(--spacing-md); }
+        .team-member { text-align:center; }
+        .team-photo { width:150px; height:150px; margin:0 auto var(--spacing-sm); border-radius:50%; background-size:cover; background-position:center; background-color:var(--accent-light); border:4px solid var(--accent); }
+        .team-member h4 { color:var(--primary-dark); margin-bottom:0.25rem; }
+        .team-member span { color:var(--text-secondary); font-size:0.9rem; }
+        /* Estatutos */
+        .statutes-section { margin-top:var(--spacing-lg); }
+        .statutes-card { background:var(--background-light); padding:var(--spacing-lg); border-radius:16px; display:flex; align-items:center; gap:var(--spacing-md); }
+        .statutes-icon { width:80px; height:80px; background:var(--accent); border-radius:16px; display:flex; align-items:center; justify-content:center; color:var(--primary-dark); flex-shrink:0; }
+        .statutes-icon svg { width:40px; height:40px; }
+        .statutes-content h3 { color:var(--primary-dark); margin-bottom:0.5rem; }
+        .statutes-content p { color:var(--text-secondary); margin-bottom:var(--spacing-sm); }
+
+        /* ATIVIDADES */
+        .activities { padding:var(--spacing-xl) 0; background:var(--background-light); }
+        .events-list { display:flex; flex-direction:column; gap:var(--spacing-md); }
+        .event-item { background:white; border-radius:16px; padding:var(--spacing-md); display:flex; gap:var(--spacing-md); box-shadow:0 4px 20px var(--shadow); transition:var(--transition); }
+        .event-item:hover { box-shadow:0 8px 40px var(--shadow-strong); transform:translateX(8px); }
+        .event-date-badge { flex-shrink:0; width:80px; height:80px; background:var(--accent); border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--primary-dark); text-align:center; }
+        .event-date-badge.completed { background:var(--text-light); color:white; }
+        .event-day { font-size:2rem; font-weight:900; line-height:1; }
+        .event-month { font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:1px; }
+        .event-details { flex:1; }
+        .event-header { display:flex; justify-content:space-between; align-items:start; margin-bottom:var(--spacing-sm); gap:var(--spacing-sm); }
+        .event-header h3 { color:var(--primary-dark); flex:1; }
+        .event-status { padding:0.4rem 1rem; border-radius:20px; font-size:0.75rem; font-weight:600; text-transform:uppercase; white-space:nowrap; }
+        .status-upcoming { background:rgba(106,176,222,0.1); color:var(--accent); }
+        .status-completed { background:rgba(102,102,102,0.1); color:var(--text-light); }
+        .status-final { background:gold; color:black; font-weight:800; }
+        .event-meta { display:flex; gap:var(--spacing-md); margin-bottom:var(--spacing-sm); flex-wrap:wrap; }
+        .event-meta span { display:flex; align-items:center; gap:0.5rem; color:var(--text-secondary); font-size:0.9rem; }
+        .event-description { color:var(--text-secondary); line-height:1.7; }
+        .match-title { font-size:2rem; margin:0.5rem 0; color:var(--primary-dark); font-weight:900; }
+        .coach-preview { background:#eef2f5; padding:1.5rem; border-radius:12px; margin-top:1rem; border-left:5px solid var(--accent); }
+        .coach-preview h4 { margin-bottom:0.5rem; color:var(--accent); }
+
+        /* DEPOIMENTOS */
+        .testimonials { padding:var(--spacing-xl) 0; background:var(--background-light); }
+        .testimonials-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:var(--spacing-md); }
+        .testimonial-card { background:white; padding:var(--spacing-lg); border-radius:16px; position:relative; transition:var(--transition); box-shadow:0 4px 20px var(--shadow); height:auto; overflow:visible; }
+        .testimonial-card:hover { transform:translateY(-5px); box-shadow:0 10px 30px var(--shadow-strong); }
+        .testimonial-quote { font-size:3rem; color:var(--accent); opacity:0.2; position:absolute; top:0; right:20px; font-family:serif; }
+        .testimonial-text { font-style:italic; margin-bottom:var(--spacing-md); color:var(--text-secondary); line-height:1.7; word-break:break-word; white-space:normal; }
+        .testimonial-author { display:flex; align-items:center; gap:var(--spacing-sm); border-top:1px solid var(--border); padding-top:var(--spacing-sm); }
+        .author-avatar { width:50px; height:50px; border-radius:50%; background-size:cover; background-position:center; background-color:var(--accent-light); border:2px solid var(--accent); flex-shrink:0; }
+        .author-info h4 { font-size:1.1rem; margin-bottom:0.2rem; color:var(--primary-dark); }
+        .author-info p { font-size:0.85rem; color:var(--text-light); margin:0; }
+
+        /* DECLARAÇÕES */
+        .statements { padding:var(--spacing-xl) 0; }
+        .preview-card { background:linear-gradient(145deg,#ffffff,#f5f9ff); border-radius:24px; padding:var(--spacing-lg); margin-bottom:var(--spacing-lg); box-shadow:0 8px 30px var(--shadow); }
+        .preview-header { margin-bottom:var(--spacing-md); }
+        .preview-badge { display:inline-block; background:var(--accent); color:var(--primary-dark); padding:0.25rem 1rem; border-radius:20px; font-weight:600; font-size:0.85rem; margin-bottom:0.5rem; }
+        .preview-content { display:grid; grid-template-columns:1fr 200px; gap:var(--spacing-md); align-items:center; }
+        .coach-statement { display:flex; gap:var(--spacing-md); align-items:flex-start; }
+        .statement-avatar { width:80px; height:80px; border-radius:50%; overflow:hidden; flex-shrink:0; border:3px solid var(--accent); }
+        .statement-avatar img { width:100%; height:100%; object-fit:cover; }
+        .statement-bubble { background:white; padding:var(--spacing-md); border-radius:20px; position:relative; box-shadow:0 4px 15px var(--shadow); }
+        .statement-bubble::before { content:''; position:absolute; left:-10px; top:20px; width:0; height:0; border-top:10px solid transparent; border-bottom:10px solid transparent; border-right:10px solid white; }
+        .statement-text { font-style:italic; margin-bottom:0.5rem; }
+        .statement-meta { font-size:0.9rem; }
+        .statement-meta strong { color:var(--primary-dark); }
+        .statement-meta span { color:var(--text-light); }
+        .preview-stats { display:flex; gap:1rem; justify-content:flex-end; }
+        .preview-stats .stat { text-align:center; }
+        .preview-stats .stat-value { font-size:1.8rem; font-weight:900; color:var(--accent); display:block; }
+        .preview-stats .stat-label { font-size:0.8rem; color:var(--text-light); }
+        .statements-grid { display:grid; grid-template-columns:1fr; gap:var(--spacing-md); }
+        .statement-card { background:white; border-radius:16px; padding:var(--spacing-lg); box-shadow:0 4px 20px var(--shadow); border-left:5px solid var(--accent); }
+        .statement-card-header { display:flex; align-items:center; gap:var(--spacing-md); margin-bottom:var(--spacing-md); }
+        .statement-card-avatar { width:70px; height:70px; border-radius:50%; background-size:cover; background-position:center; border:3px solid var(--accent); }
+        .statement-card-author h4 { margin-bottom:0.2rem; }
+        .statement-card-author span { color:var(--accent); font-weight:600; }
+        .statement-card-body { margin-bottom:var(--spacing-md); }
+        .interview-item { margin-bottom:1rem; }
+        .interview-item p:first-child { font-weight:700; color:var(--primary-dark); }
+        .interview-item p:last-child { font-style:italic; margin-left:1rem; }
+        .statement-card-footer { display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; color:var(--text-light); border-top:1px solid var(--border); padding-top:var(--spacing-sm); }
+        .statement-tag { background:var(--background-light); padding:0.2rem 0.8rem; border-radius:20px; }
+
+        /* JOGADORES */
+        .players { padding:var(--spacing-xl) 0; position:relative; }
+        .players-wrapper { position:relative; display:flex; align-items:center; }
+        .players-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--spacing-md); width:100%; }
+        .scroll-btn { position:absolute; top:50%; transform:translateY(-50%); width:40px; height:40px; background:var(--accent); border:none; border-radius:50%; color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; transition:var(--transition); box-shadow:0 4px 10px var(--shadow); }
+        .scroll-btn:hover { background:var(--primary-dark); transform:translateY(-50%) scale(1.1); }
+        .scroll-btn.left { left:-20px; }
+        .scroll-btn.right { right:-20px; }
+        .scroll-btn svg { width:24px; height:24px; }
+        @media (max-width:768px){
+            .players-grid{ display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:var(--spacing-sm); padding-bottom:var(--spacing-sm); grid-template-columns:none; }
+            .players-grid .player-card{ flex:0 0 80%; scroll-snap-align:start; }
+            .scroll-btn{ display:none; }
+        }
+        .player-card { background:white; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px var(--shadow); transition:var(--transition); cursor:pointer; position:relative; }
+        .player-card:hover { transform:translateY(-8px); box-shadow:0 12px 40px var(--shadow-strong); }
+        .player-photo { position:relative; padding-bottom:120%; background-size:cover; background-position:center; background-color:var(--accent-light); }
+        .player-info { padding:var(--spacing-md); text-align:center; position:relative; }
+        .player-number { position:absolute; top:-30px; right:var(--spacing-md); width:60px; height:60px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:900; color:var(--primary-dark); box-shadow:0 4px 15px var(--shadow); }
+        .player-name { color:var(--primary-dark); margin-bottom:0.5rem; font-size:1.2rem; }
+        .player-position { color:var(--text-secondary); font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; font-weight:600; }
+
+        /* MODAL JOGADOR */
+        .player-modal { display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; padding:var(--spacing-md); animation:fadeIn 0.3s ease-out; }
+        .player-modal.active { display:flex; }
+        .player-modal-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.9); backdrop-filter:blur(10px); }
+        .player-modal-content { position:relative; background:white; border-radius:24px; max-width:1000px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.3); animation:slideInUp 0.4s ease-out; }
+        @keyframes slideInUp { from{opacity:0;transform:translateY(50px) scale(0.95);} to{opacity:1;transform:translateY(0) scale(1);} }
+        .player-modal-close { position:absolute; top:1.5rem; right:1.5rem; width:40px; height:40px; background:rgba(0,0,0,0.1); backdrop-filter:blur(10px); border:2px solid rgba(0,0,0,0.2); border-radius:50%; color:var(--text-primary); font-size:1.5rem; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; }
+        .player-modal-close:hover { background:var(--accent); color:white; transform:rotate(90deg); }
+        .player-nav-btn { position:absolute; top:50%; transform:translateY(-50%); width:50px; height:50px; background:rgba(255,255,255,0.9); border:none; border-radius:50%; color:var(--primary-dark); cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; box-shadow:0 4px 20px var(--shadow); }
+        .player-nav-btn:hover { background:var(--accent); color:white; transform:translateY(-50%) scale(1.1); }
+        .player-prev { left:-25px; }
+        .player-next { right:-25px; }
+        .player-nav-btn svg { width:24px; height:24px; }
+        .player-modal-body { display:grid; grid-template-columns:1fr 2fr; gap:var(--spacing-lg); padding:var(--spacing-lg); }
+        .player-modal-left { position:relative; }
+        .player-modal-photo { width:100%; padding-bottom:140%; background-size:cover; background-position:center; background-color:var(--accent-light); border-radius:16px; position:relative; overflow:hidden; }
+        .player-modal-number { position:absolute; bottom:-30px; right:20px; width:100px; height:100px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:900; color:var(--primary-dark); box-shadow:0 8px 30px rgba(106,176,222,0.4); }
+        .player-modal-right { display:flex; flex-direction:column; gap:var(--spacing-md); }
+        .player-modal-name { font-size:2.5rem; color:var(--primary-dark); margin:0; }
+        .player-modal-position { color:var(--accent); font-size:1rem; text-transform:uppercase; letter-spacing:2px; font-weight:700; }
+        .player-bio h3, .player-stats h3, .player-details h3 { color:var(--primary-dark); font-size:1.3rem; margin-bottom:var(--spacing-sm); border-bottom:2px solid var(--accent); padding-bottom:0.5rem; }
+        .player-bio-text { color:var(--text-secondary); line-height:1.8; margin:0; }
+        .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:var(--spacing-md); }
+        .stat-item { background:var(--background-light); padding:var(--spacing-md); border-radius:12px; text-align:center; transition:var(--transition); }
+        .stat-item:hover { background:var(--primary-dark); color:white; transform:translateY(-4px); }
+        .stat-value { display:block; font-size:2rem; font-weight:900; color:var(--accent); font-family:var(--font-display); margin-bottom:0.5rem; }
+        .stat-item:hover .stat-value { color:var(--accent-light); }
+        .stat-label { display:block; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; font-weight:600; color:var(--text-secondary); }
+        .stat-item:hover .stat-label { color:rgba(255,255,255,0.9); }
+        .details-list { display:flex; flex-direction:column; gap:var(--spacing-sm); }
+        .detail-item { display:flex; justify-content:space-between; padding:var(--spacing-sm); background:var(--background-light); border-radius:8px; }
+        .detail-label { font-weight:600; color:var(--text-primary); }
+        .detail-value { color:var(--text-secondary); }
+
+        /* GALERIA */
+        .gallery { padding:var(--spacing-xl) 0; position:relative; }
+        .gallery-wrapper { position:relative; display:flex; align-items:center; }
+        .gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--spacing-sm); width:100%; }
+        @media (max-width:768px){
+            .gallery-grid{ display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:var(--spacing-sm); padding-bottom:var(--spacing-sm); grid-template-columns:none; }
+            .gallery-grid .gallery-item{ flex:0 0 80%; scroll-snap-align:start; }
+        }
+        .gallery-item { position:relative; padding-bottom:75%; border-radius:12px; overflow:hidden; cursor:pointer; transition:var(--transition); }
+        .gallery-item:hover { transform:scale(1.02); }
+        .gallery-image { position:absolute; inset:0; background-size:cover; background-position:center; background-color:var(--accent-light); }
+        .gallery-overlay { position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.8), transparent); display:flex; align-items:flex-end; padding:var(--spacing-md); opacity:0; transition:var(--transition); }
+        .gallery-item:hover .gallery-overlay { opacity:1; }
+        .gallery-title { color:white; font-weight:600; font-size:1.1rem; }
+
+        /* LIGHTBOX */
+        .lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:9999; align-items:center; justify-content:center; padding:var(--spacing-md); }
+        .lightbox.active { display:flex; }
+        .lightbox-close { position:absolute; top:2rem; right:2rem; background:rgba(255,255,255,0.1); backdrop-filter:blur(10px); border:2px solid rgba(255,255,255,0.2); border-radius:50%; color:white; width:50px; height:50px; font-size:2rem; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10001; }
+        .lightbox-close:hover { background:var(--accent); transform:rotate(90deg); }
+        .lightbox-nav-btn { position:absolute; top:50%; transform:translateY(-50%); width:60px; height:60px; background:rgba(255,255,255,0.1); backdrop-filter:blur(10px); border:2px solid rgba(255,255,255,0.2); border-radius:50%; color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10001; }
+        .lightbox-nav-btn:hover { background:var(--accent); transform:translateY(-50%) scale(1.1); }
+        .lightbox-prev { left:2rem; }
+        .lightbox-next { right:2rem; }
+        .lightbox-nav-btn svg { width:28px; height:28px; }
+        .lightbox-content { position:relative; max-width:90vw; max-height:90vh; display:flex; flex-direction:column; align-items:center; }
+        .lightbox-content img { max-width:100%; max-height:80vh; border-radius:8px; box-shadow:0 20px 60px rgba(0,0,0,0.5); }
+        .lightbox-caption { margin-top:var(--spacing-md); color:white; font-size:1.2rem; font-weight:600; }
+        .lightbox-counter { margin-top:var(--spacing-sm); color:rgba(255,255,255,0.7); font-size:0.9rem; }
+
+        /* NOTÍCIAS */
+        .news { padding:var(--spacing-xl) 0; background:var(--background-light); }
+        .news-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:var(--spacing-md); }
+        .news-card { background:white; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px var(--shadow); transition:var(--transition); cursor:pointer; }
+        .news-card:hover { transform:translateY(-8px); box-shadow:0 12px 40px var(--shadow-strong); }
+        .news-card.featured { grid-column:span 2; }
+        .news-image { position:relative; padding-bottom:60%; background-size:cover; background-position:center; background-color:var(--accent-light); }
+        .news-content { padding:var(--spacing-md); }
+        .news-date, .news-category { font-size:0.85rem; color:var(--text-light); margin-right:var(--spacing-sm); }
+        .news-category { color:var(--accent); font-weight:600; text-transform:uppercase; letter-spacing:1px; }
+        .news-card h3 { color:var(--primary-dark); margin:var(--spacing-sm) 0; font-size:1.5rem; }
+        .news-card p { color:var(--text-secondary); margin-bottom:var(--spacing-sm); }
+        .news-link { color:var(--accent); font-weight:600; display:inline-flex; align-items:center; gap:0.5rem; cursor:pointer; }
+
+        /* MODAL NOTÍCIAS */
+        .news-modal { display:none; position:fixed; inset:0; z-index:10000; align-items:center; justify-content:center; padding:var(--spacing-md); }
+        .news-modal.active { display:flex; }
+        .news-modal-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.9); backdrop-filter:blur(10px); }
+        .news-modal-content { position:relative; background:white; border-radius:24px; max-width:800px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+        .news-modal-close { position:absolute; top:1.5rem; right:1.5rem; width:40px; height:40px; background:rgba(0,0,0,0.1); border:2px solid rgba(0,0,0,0.2); border-radius:50%; color:var(--text-primary); font-size:1.5rem; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; }
+        .news-modal-close:hover { background:var(--accent); color:white; transform:rotate(90deg); }
+        .news-modal-body { padding:var(--spacing-lg); }
+        .news-modal-title { font-size:2rem; color:var(--primary-dark); margin-bottom:var(--spacing-sm); padding-right:3rem; }
+        .news-modal-meta { display:flex; gap:var(--spacing-md); margin-bottom:var(--spacing-md); color:var(--text-secondary); font-size:0.9rem; }
+        .news-modal-category { color:var(--accent); font-weight:600; text-transform:uppercase; }
+        .news-modal-image { width:100%; height:300px; background-size:cover; background-position:center; border-radius:16px; margin-bottom:var(--spacing-md); }
+        .news-modal-text { color:var(--text-secondary); line-height:1.8; font-size:1.1rem; }
+
+        /* CONTACTO */
+        .contact { padding:var(--spacing-xl) 0; }
+        .contact-grid { display:grid; grid-template-columns:1fr 1.5fr; gap:var(--spacing-lg); }
+        .contact-info { display:flex; flex-direction:column; gap:var(--spacing-md); }
+        .contact-item { display:flex; gap:var(--spacing-md); align-items:start; }
+        .contact-icon { width:50px; height:50px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--primary-dark); flex-shrink:0; }
+        .contact-icon svg { width:24px; height:24px; }
+        .contact-details h3 { color:var(--primary-dark); margin-bottom:0.5rem; font-size:1.2rem; }
+        .contact-details a { color:var(--accent); font-weight:600; }
+        .contact-details a:hover { text-decoration:underline; }
+        .contact-details p { color:var(--text-secondary); margin:0; }
+        .social-links h3 { color:var(--primary-dark); margin-bottom:var(--spacing-sm); }
+        .social-icons { display:flex; gap:var(--spacing-sm); }
+        .social-icons a { width:50px; height:50px; background:var(--background-light); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--primary-dark); transition:var(--transition); }
+        .social-icons a:hover { background:var(--accent); color:white; transform:translateY(-4px); }
+        .social-icons svg { width:24px; height:24px; }
+        .contact-map { border-radius:16px; overflow:hidden; box-shadow:0 4px 20px var(--shadow); }
+
+        /* RODAPÉ */
+        .footer { background:var(--primary-dark); color:white; padding:var(--spacing-lg) 0 var(--spacing-md); }
+        .footer-content { display:grid; grid-template-columns:2fr 1fr 1fr; gap:var(--spacing-lg); margin-bottom:var(--spacing-lg); }
+        .footer-brand h3 { font-size:2rem; margin-bottom:var(--spacing-sm); color:white; }
+        .footer-brand p { opacity:0.8; }
+        .footer-links h4, .footer-contact h4 { margin-bottom:var(--spacing-sm); color:var(--accent); }
+        .footer-links ul { list-style:none; }
+        .footer-links li { margin-bottom:0.5rem; }
+        .footer-links a { opacity:0.8; transition:var(--transition); }
+        .footer-links a:hover { opacity:1; padding-left:0.5rem; }
+        .footer-contact p { opacity:0.8; margin-bottom:0.5rem; }
+        .footer-contact a { color:var(--accent); }
+        .footer-bottom { border-top:1px solid rgba(255,255,255,0.1); padding-top:var(--spacing-md); text-align:center; opacity:0.7; }
+
+        /* BOTÃO VOLTAR AO TOPO */
+        .scroll-to-top { position:fixed; bottom:2rem; right:2rem; width:50px; height:50px; border-radius:50%; background:var(--accent); color:white; border:none; font-size:1.5rem; cursor:pointer; opacity:0; transition:opacity 0.3s, transform 0.3s; z-index:999; box-shadow:0 4px 20px rgba(0,0,0,0.2); }
+        .scroll-to-top.visible { opacity:1; transform:scale(1); }
+
+        /* RESPONSIVIDADE */
+        @media (max-width:1024px) {
+            .about-grid, .contact-grid, .preview-content { grid-template-columns:1fr; }
+            .news-card.featured { grid-column:span 1; }
+            .footer-content { grid-template-columns:1fr; }
+            .player-modal-body { grid-template-columns:1fr; }
+            .player-modal-number { bottom:auto; top:-20px; right:20px; width:80px; height:80px; font-size:2.5rem; }
+            .stats-grid { grid-template-columns:repeat(2,1fr); }
+            .coach-statement { flex-direction:column; align-items:center; text-align:center; }
+            .statement-bubble::before { display:none; }
+        }
+        @media (max-width:768px) {
+            .nav-menu { position:fixed; top:80px; left:-100%; width:100%; height:calc(100vh - 80px); background:white; flex-direction:column; padding:var(--spacing-lg); transition:var(--transition); box-shadow:0 4px 20px var(--shadow); }
+            .nav-menu.active { left:0; }
+            .nav-toggle { display:flex; }
+            .hero { margin-top:80px; }
+            .activities-grid, .mvv-grid, .team-grid, .news-grid, .testimonials-grid { grid-template-columns:1fr; }
+            .event-item { flex-direction:column; }
+            .event-date-badge { align-self:flex-start; }
+            .event-header { flex-direction:column; }
+            .statutes-card { flex-direction:column; text-align:center; }
+            .player-nav-btn { width:40px; height:40px; }
+            .player-prev { left:-15px; }
+            .player-next { right:-15px; }
+            .lightbox-nav-btn { width:50px; height:50px; }
+            .lightbox-prev { left:1rem; }
+            .lightbox-next { right:1rem; }
+            .lightbox-close { top:1rem; right:1rem; width:40px; height:40px; font-size:1.5rem; }
+        }
+        @media (max-width:480px) {
+            :root { --spacing-lg:3rem; --spacing-xl:4rem; }
+            .hero-title { font-size:2.5rem; }
+            .section-title { font-size:2rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navegação -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="static/logo.png" alt="FC Bengala logo">
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Abrir menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#inicio" class="nav-link">Início</a></li>
+                <li><a href="#sobre" class="nav-link">Sobre</a></li>
+                <li><a href="#actividades" class="nav-link">Actividades</a></li>
+                <li><a href="#jogadores" class="nav-link">Jogadores</a></li>
+                <li><a href="#declaracoes" class="nav-link">Declarações</a></li>
+                <li><a href="#galeria" class="nav-link">Galeria</a></li>
+                <li><a href="#noticias" class="nav-link">Notícias</a></li>
+                <li><a href="#contacto" class="nav-link">Contacto</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section id="inicio" class="hero">
+        <div class="hero-background" role="img" aria-label="Equipa do FC Bengala em campo"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">FC BENGALA</h1>
+            <p class="hero-subtitle" style="color:#ffffff;">Construindo comunidade através do desporto, cultura e inovação</p>
+            <div class="hero-cta">
+                <a href="#sobre" class="btn btn-primary">Conhecer o Clube</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Últimas Actividades (dinâmico) -->
+    <section class="latest-activities">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Em destaque</span>
+                <h2 class="section-title">Últimas Actividades</h2>
+            </div>
+            <div class="activities-grid" id="activitiesGrid">
+                <!-- preenchido via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre -->
+    <section id="sobre" class="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <span class="section-label">Quem somos</span>
+                    <h2 class="section-title">Sobre o FC BENGALA</h2>
+                    <div class="about-text">
+                        <p>O FC BENGALA é um clube dedicado ao desenvolvimento integral dos seus membros e da comunidade envolvente. Fundado com o propósito de criar um espaço de convívio, aprendizagem e crescimento colectivo, unimos pessoas através do desporto, da cultura e de actividades sociais.</p>
+                        <p>Acreditamos no poder transformador da união e do trabalho em equipa. Cada membro do FC BENGALA contribui para uma rede de apoio mútuo onde talentos são descobertos, amizades são criadas e objectivos são alcançados.</p>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="about-placeholder" style="background-image:url('static/grupo.jpg');" role="img" aria-label="Grupo de membros do clube"></div>
+                </div>
+            </div>
+
+            <!-- Missão, Visão, Valores -->
+            <div class="mvv-grid">
+                <div class="mvv-card">
+                    <div class="mvv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+                    <h3>Missão</h3>
+                    <p>Promover o desenvolvimento pessoal e social através de actividades desportivas, culturais e formativas, criando um ambiente de união e crescimento colectivo.</p>
+                </div>
+                <div class="mvv-card">
+                    <div class="mvv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+                    <h3>Visão</h3>
+                    <p>Ser um clube de referência na região, reconhecido pelo impacto positivo na comunidade e pela excelência nas suas actividades e na formação dos seus membros.</p>
+                </div>
+                <div class="mvv-card">
+                    <div class="mvv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                    <h3>Valores</h3>
+                    <p>União, Respeito, Integridade, Compromisso, Inovação e Solidariedade. Estes princípios orientam todas as nossas acções e decisões.</p>
+                </div>
+            </div>
+
+            <!-- Directoria -->
+            <div class="team-section">
+                <h3 class="subsection-title">Directoria</h3>
+                <div class="team-grid" id="directoriaGrid"></div>
+            </div>
+
+            <!-- Estatutos -->
+            <div class="statutes-section">
+                <div class="statutes-card">
+                    <div class="statutes-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+                    <div class="statutes-content">
+                        <h3>Estatutos do Clube</h3>
+                        <p>Consulte o documento completo com os estatutos oficiais do FC BENGALA</p>
+                        <a href="static/estatuto.pdf" class="btn btn-secondary" download>Download PDF</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Actividades -->
+    <section id="actividades" class="activities">
+        <div class="container">
+            <div class="section-header centered">
+                <span class="section-label">O que fazemos</span>
+                <h2 class="section-title">Actividades e Eventos</h2>
+            </div>
+            <div class="events-list" id="eventsList"></div>
+        </div>
+    </section>
+
+    <!-- Jogadores -->
+    <section id="jogadores" class="players">
+        <div class="container">
+            <div class="section-header centered">
+                <span class="section-label">Nosso Plantel</span>
+                <h2 class="section-title">Jogadores</h2>
+            </div>
+            <div class="players-wrapper">
+                <button class="scroll-btn left" id="playersScrollLeft" aria-label="Anterior"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+                <div class="players-grid" id="playersGrid"></div>
+                <button class="scroll-btn right" id="playersScrollRight" aria-label="Próximo"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Jogador -->
+    <div class="player-modal" id="playerModal">
+        <div class="player-modal-overlay"></div>
+        <div class="player-modal-content">
+            <button class="player-modal-close" id="playerModalClose">&times;</button>
+            <button class="player-nav-btn player-prev" id="playerPrev" aria-label="Jogador anterior"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <button class="player-nav-btn player-next" id="playerNext" aria-label="Próximo jogador"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+            <div class="player-modal-body">
+                <div class="player-modal-left">
+                    <div class="player-modal-photo" style="background-image:url('static/logo.png');" role="img" aria-label="Foto do jogador"></div>
+                    <div class="player-modal-number"></div>
+                </div>
+                <div class="player-modal-right">
+                    <h2 class="player-modal-name"></h2>
+                    <span class="player-modal-position"></span>
+                    <div class="player-bio"><h3>Biografia</h3><p class="player-bio-text"></p></div>
+                    <div class="player-stats"><h3>Estatísticas da Época</h3><div class="stats-grid"></div></div>
+                    <div class="player-details"><h3>Detalhes</h3><div class="details-list"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Declarações -->
+    <section id="declaracoes" class="statements">
+        <div class="container">
+            <div class="section-header centered">
+                <span class="section-label">Vozes do Bengala</span>
+                <h2 class="section-title">Declarações</h2>
+            </div>
+            <div class="statements-grid" id="declaracoesGrid"></div>
+        </div>
+    </section>
+
+    <!-- Depoimentos (estáticos, mas podem ser dinâmicos futuramente) -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header centered">
+                <span class="section-label">Depoimentos</span>
+                <h2 class="section-title">O que dizem sobre o Bengala</h2>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">“</div>
+                    <p class="testimonial-text">“Jogar no Bengala é mais que futebol. É aprender a ser homem, a respeitar e a lutar pelos sonhos. O clube é a minha segunda família.”</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar" style="background-image:url('static/AldeLuciano.png');" role="img" aria-label="Alde Luciano"></div>
+                        <div class="author-info"><h4>Alde Luciano</h4><p>Jogador (Médio)</p></div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">“</div>
+                    <p class="testimonial-text">“Cheguei aqui com 14 anos e hoje sou treinador. O Bengala acredita nos jovens e dá oportunidades. Orgulho de fazer parte desta história.”</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar" style="background-image:url('static/Treinador.png');" role="img" aria-label="Janfar Mustafa"></div>
+                        <div class="author-info"><h4>Janfar Mustafa</h4><p>Treinador Principal</p></div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">“</div>
+                    <p class="testimonial-text">“O trabalho social que o clube desenvolve na comunidade é incrível. Ver as crianças com material escolar e sorrisos no rosto não tem preço.”</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar" style="background-image:url('static/desportivo.jpeg');" role="img" aria-label="Ramadane Buana Chale"></div>
+                        <div class="author-info"><h4>Ramadane Buana Chale</h4><p>Director Desportivo</p></div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">“</div>
+                    <p class="testimonial-text">“Meu filho evoluiu muito desde que entrou no Bengala. Não só como jogador, mas como pessoa. A disciplina e o apoio que recebe aqui são fantásticos.”</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar" style="background-image:url('static/logo.png');" role="img" aria-label="Maria Tome"></div>
+                        <div class="author-info"><h4>Maria Tome</h4><p>Mãe de atleta</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galeria -->
+    <section id="galeria" class="gallery">
+        <div class="container">
+            <div class="section-header centered">
+                <span class="section-label">Momentos</span>
+                <h2 class="section-title">Galeria</h2>
+            </div>
+            <div class="gallery-wrapper">
+                <button class="scroll-btn left" id="galleryScrollLeft" aria-label="Anterior"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+                <div class="gallery-grid" id="galleryGrid"></div>
+                <button class="scroll-btn right" id="galleryScrollRight" aria-label="Próximo"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notícias -->
+    <section id="noticias" class="news">
+        <div class="container">
+            <div class="section-header centered">
+                <span class="section-label">Actualidades</span>
+                <h2 class="section-title">Notícias</h2>
+            </div>
+            <div class="news-grid" id="newsGrid"></div>
+        </div>
+    </section>
+
+    <!-- Modal Notícia -->
+    <div class="news-modal" id="newsModal">
+        <div class="news-modal-overlay"></div>
+        <div class="news-modal-content">
+            <button class="news-modal-close" id="newsModalClose">&times;</button>
+            <div class="news-modal-body">
+                <h2 class="news-modal-title"></h2>
+                <div class="news-modal-meta">
+                    <span class="news-modal-date"></span>
+                    <span class="news-modal-category"></span>
+                </div>
+                <div class="news-modal-image"></div>
+                <div class="news-modal-text"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contacto -->
+    <section id="contacto" class="contact">
+        <div class="container">
+            <div class="section-header centered">
+                <span class="section-label">Fale connosco</span>
+                <h2 class="section-title">Contacto</h2>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+                        <div class="contact-details"><h3>WhatsApp</h3><a href="https://wa.me/258864695548" target="_blank">+258 86 469 5548</a></div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                        <div class="contact-details"><h3>Email</h3><a href="mailto:benga@geral.co.mz">benga@geral.co.mz</a></div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                        <div class="contact-details"><h3>Localização</h3><p>Massingirine, Nacala-a-Velha, Moçambique</p></div>
+                    </div>
+                    <div class="social-links">
+                        <h3>Redes Sociais</h3>
+                        <div class="social-icons">
+                            <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                            <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d15563.875281901265!2d40.622389!3d-14.545563!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e2!4m5!1s0x18b8550f5d4b5c77%3A0xd6382ef8ba21adf!2sEscola%20de%20futebol%20bengala%2C%20FJ3J%2BFMQ%2C%20Nacala%20Velha!3m2!1d-14.5462823!2d40.6317242!4m5!1s0x18b8570f561346a5%3A0x65a6a9045994f712!2sNacala-a-Velha!3m2!1d-14.545563!2d40.622389!5e0!3m2!1spt-PT!2smz!4v1709678900000!5m2!1spt-PT!2smz" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" title="Localização do clube"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>FC BENGALA</h3>
+                    <p>Construindo comunidade através do desporto, cultura e inovação.</p>
+                    <div class="social-icons" style="margin-top:1rem;">
+                        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Links Rápidos</h4>
+                    <ul>
+                        <li><a href="#inicio">Início</a></li>
+                        <li><a href="#sobre">Sobre</a></li>
+                        <li><a href="#actividades">Actividades</a></li>
+                        <li><a href="#jogadores">Jogadores</a></li>
+                        <li><a href="#declaracoes">Declarações</a></li>
+                        <li><a href="#galeria">Galeria</a></li>
+                        <li><a href="#noticias">Notícias</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contacto</h4>
+                    <p>Email: <a href="mailto:benga@geral.co.mz">benga@geral.co.mz</a></p>
+                    <p>WhatsApp: <a href="https://wa.me/258864695548">+258 86 469 5548</a></p>
+                    <p>Ponte-Massingirine, Nacala-a-Velha, Moçambique</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 FC BENGALA. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose">&times;</button>
+        <button class="lightbox-nav-btn lightbox-prev" id="lightboxPrev" aria-label="Imagem anterior"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button class="lightbox-nav-btn lightbox-next" id="lightboxNext" aria-label="Próxima imagem"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+        <div class="lightbox-content">
+            <img src="" alt="" id="lightboxImage">
+            <div class="lightbox-caption" id="lightboxCaption"></div>
+            <div class="lightbox-counter" id="lightboxCounter"></div>
+        </div>
+    </div>
+
+    <script>
+        // ========== FUNÇÕES DE CARREGAMENTO DE DADOS ==========
+        async function loadData(endpoint) {
+            try {
+                const res = await fetch('/api/public/' + endpoint);
+                return await res.json();
+            } catch (e) {
+                console.error('Erro a carregar ' + endpoint, e);
+                return [];
+            }
+        }
+
+        // ========== RENDERIZAR ACTIVIDADES (últimas 3) ==========
+        async function renderActivities() {
+            const eventos = await loadData('eventos');
+            const grid = document.getElementById('activitiesGrid');
+            grid.innerHTML = '';
+            const ultimos = eventos.slice(0, 3);
+            ultimos.forEach(ev => {
+                const dataParts = ev.data ? ev.data.split(' ') : ['', ''];
+                const dia = dataParts[0] || '??';
+                const mes = dataParts[1]?.substring(0,3) || '???';
+                const badgeClass = ev.status === 'upcoming' ? 'badge-upcoming' : '';
+                const badgeText = ev.status === 'upcoming' ? 'Em Breve' : 'Concluído';
+                grid.innerHTML += `
+                    <article class="activity-card">
+                        <div class="activity-image">
+                            <div class="activity-placeholder" style="background-image:url('static/logo.png');" role="img" aria-label="${ev.titulo}"></div>
+                            <span class="activity-badge ${badgeClass}">${badgeText}</span>
+                        </div>
+                        <div class="activity-content">
+                            <span class="activity-date">${ev.data || ''}</span>
+                            <h3 class="activity-title">${ev.titulo}</h3>
+                            <p class="activity-description">${ev.descricao || ''}</p>
+                        </div>
+                    </article>
+                `;
+            });
+        }
+
+        // ========== RENDERIZAR DIRECTÓRIA ==========
+        async function renderDirectoria() {
+            const membros = await loadData('directoria');
+            const grid = document.getElementById('directoriaGrid');
+            grid.innerHTML = '';
+            membros.forEach(m => {
+                grid.innerHTML += `
+                    <div class="team-member">
+                        <div class="team-photo" style="background-image:url('${m.foto || 'static/logo.png'}');" role="img" aria-label="${m.nome}"></div>
+                        <h4>${m.nome}</h4>
+                        <span>${m.cargo || ''}</span>
+                    </div>
+                `;
+            });
+        }
+
+        // ========== RENDERIZAR EVENTOS ==========
+        async function renderEventos() {
+            const eventos = await loadData('eventos');
+            const list = document.getElementById('eventsList');
+            list.innerHTML = '';
+            eventos.forEach(ev => {
+                const dataParts = ev.data ? ev.data.split(' ') : ['', ''];
+                const dia = dataParts[0] || '??';
+                const mes = dataParts[1]?.substring(0,3) || '???';
+                const badgeClass = ev.status === 'upcoming' ? 'status-upcoming' : 'status-completed';
+                const badgeText = ev.status === 'upcoming' ? 'Em Breve' : 'Concluído';
+                const dataBadgeClass = ev.status === 'completed' ? 'completed' : '';
+                list.innerHTML += `
+                    <article class="event-item">
+                        <div class="event-date-badge ${dataBadgeClass}">
+                            <span class="event-day">${dia}</span>
+                            <span class="event-month">${mes}</span>
+                        </div>
+                        <div class="event-details">
+                            <div class="event-header">
+                                <h3>${ev.titulo}</h3>
+                                <span class="event-status ${badgeClass}">${badgeText}</span>
+                            </div>
+                            <div class="event-meta">
+                                <span class="event-location">📍 ${ev.local || ''}</span>
+                                <span class="event-time">🕒 ${ev.hora || ''}</span>
+                            </div>
+                            <p class="event-description">${ev.descricao || ''}</p>
+                        </div>
+                    </article>
+                `;
+            });
+        }
+
+        // ========== RENDERIZAR JOGADORES ==========
+        let jogadoresData = [];
+        async function renderJogadores() {
+            jogadoresData = await loadData('jogadores');
+            const grid = document.getElementById('playersGrid');
+            grid.innerHTML = '';
+            jogadoresData.forEach((j, idx) => {
+                const card = document.createElement('div');
+                card.className = 'player-card';
+                card.setAttribute('data-player', j.id);
+                card.innerHTML = `
+                    <div class="player-photo" style="background-image:url('${j.foto || 'static/logo.png'}');" role="img" aria-label="${j.nome}"></div>
+                    <div class="player-info">
+                        <div class="player-number">${j.numero || '?'}</div>
+                        <h3 class="player-name">${j.nome}</h3>
+                        <span class="player-position">${j.posicao || ''}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            attachPlayerModalEvents();
+        }
+
+        function attachPlayerModalEvents() {
+            document.querySelectorAll('.player-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const playerId = this.getAttribute('data-player');
+                    const player = jogadoresData.find(p => p.id == playerId);
+                    if (player) openPlayerModal(player);
+                });
+            });
+        }
+
+        // Modal jogador
+        let currentPlayerIndex = 0;
+        function openPlayerModal(player) {
+            currentPlayerIndex = jogadoresData.findIndex(p => p.id === player.id);
+            updatePlayerModal(player);
+            document.getElementById('playerModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function updatePlayerModal(player) {
+            document.querySelector('.player-modal-name').textContent = player.nome;
+            document.querySelector('.player-modal-position').textContent = player.posicao || '';
+            document.querySelector('.player-modal-number').textContent = player.numero || '?';
+            document.querySelector('.player-bio-text').textContent = player.bio || '';
+            document.querySelector('.player-modal-photo').style.backgroundImage = `url('${player.foto || 'static/logo.png'}')`;
+
+            const detailsList = document.querySelector('.details-list');
+            detailsList.innerHTML = `
+                <div class="detail-item"><span class="detail-label">Idade:</span><span class="detail-value">${player.idade || '—'} anos</span></div>
+                <div class="detail-item"><span class="detail-label">Nacionalidade:</span><span class="detail-value">${player.nacionalidade || 'Moçambicana'}</span></div>
+                <div class="detail-item"><span class="detail-label">Altura:</span><span class="detail-value">${player.altura || '—'}</span></div>
+                <div class="detail-item"><span class="detail-label">Pé Preferido:</span><span class="detail-value">${player.pe || '—'}</span></div>
+            `;
+
+            const statsGrid = document.querySelector('.player-stats .stats-grid');
+            statsGrid.innerHTML = `
+                <div class="stat-item"><span class="stat-value">${player.jogos || 0}</span><span class="stat-label">Jogos</span></div>
+                <div class="stat-item"><span class="stat-value">${player.golos || 0}</span><span class="stat-label">Golos</span></div>
+                <div class="stat-item"><span class="stat-value">${player.assistencias || 0}</span><span class="stat-label">Assistências</span></div>
+                <div class="stat-item"><span class="stat-value">${player.minutos || 0}</span><span class="stat-label">Minutos</span></div>
+            `;
+        }
+
+        document.getElementById('playerModalClose').addEventListener('click', () => {
+            document.getElementById('playerModal').classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        document.getElementById('playerPrev').addEventListener('click', () => {
+            if (jogadoresData.length === 0) return;
+            currentPlayerIndex = (currentPlayerIndex - 1 + jogadoresData.length) % jogadoresData.length;
+            updatePlayerModal(jogadoresData[currentPlayerIndex]);
+        });
+
+        document.getElementById('playerNext').addEventListener('click', () => {
+            if (jogadoresData.length === 0) return;
+            currentPlayerIndex = (currentPlayerIndex + 1) % jogadoresData.length;
+            updatePlayerModal(jogadoresData[currentPlayerIndex]);
+        });
+
+        // ========== RENDERIZAR DECLARAÇÕES ==========
+        async function renderDeclaracoes() {
+            const decs = await loadData('declaracoes');
+            const grid = document.getElementById('declaracoesGrid');
+            grid.innerHTML = '';
+            decs.forEach(d => {
+                grid.innerHTML += `
+                    <div class="statement-card">
+                        <div class="statement-card-header">
+                            <div class="statement-card-avatar" style="background-image:url('${d.foto || 'static/logo.png'}');" role="img" aria-label="${d.autor}"></div>
+                            <div class="statement-card-author">
+                                <h4>${d.autor}</h4>
+                                <span>${d.cargo || ''}</span>
+                            </div>
+                        </div>
+                        <div class="statement-card-body">
+                            <p>${d.conteudo || ''}</p>
+                            ${d.contexto ? `<p><strong>${d.contexto}</strong></p>` : ''}
+                        </div>
+                        <div class="statement-card-footer">
+                            <span class="statement-date">📅 ${d.data || ''}</span>
+                            <span class="statement-tag">${d.tag || ''}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // ========== RENDERIZAR GALERIA ==========
+        let galleryItems = [];
+        async function renderGaleria() {
+            galleryItems = await loadData('galeria');
+            const grid = document.getElementById('galleryGrid');
+            grid.innerHTML = '';
+            galleryItems.forEach((item, idx) => {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                div.setAttribute('data-index', idx);
+                div.innerHTML = `
+                    <div class="gallery-image" style="background-image:url('${item.imagem || 'static/logo.png'}');" role="img" aria-label="${item.titulo}"></div>
+                    <div class="gallery-overlay"><span class="gallery-title">${item.titulo}</span></div>
+                `;
+                grid.appendChild(div);
+            });
+            attachLightboxEvents();
+        }
+
+        // Lightbox
+        let currentImageIndex = 0;
+        function attachLightboxEvents() {
+            document.querySelectorAll('.gallery-item').forEach((item, idx) => {
+                item.addEventListener('click', () => openLightbox(idx));
+            });
+        }
+
+        function openLightbox(index) {
+            currentImageIndex = index;
+            updateLightbox();
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function updateLightbox() {
+            const item = galleryItems[currentImageIndex];
+            document.getElementById('lightboxImage').src = item.imagem || 'static/logo.png';
+            document.getElementById('lightboxImage').alt = item.titulo;
+            document.getElementById('lightboxCaption').textContent = item.titulo;
+            document.getElementById('lightboxCounter').textContent = `${currentImageIndex+1} / ${galleryItems.length}`;
+        }
+
+        document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+        document.getElementById('lightboxPrev').addEventListener('click', () => {
+            if (galleryItems.length === 0) return;
+            currentImageIndex = (currentImageIndex - 1 + galleryItems.length) % galleryItems.length;
+            updateLightbox();
+        });
+        document.getElementById('lightboxNext').addEventListener('click', () => {
+            if (galleryItems.length === 0) return;
+            currentImageIndex = (currentImageIndex + 1) % galleryItems.length;
+            updateLightbox();
+        });
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ========== RENDERIZAR NOTÍCIAS ==========
+        let noticiasData = [];
+        async function renderNoticias() {
+            noticiasData = await loadData('noticias');
+            const grid = document.getElementById('newsGrid');
+            grid.innerHTML = '';
+            noticiasData.forEach((n, idx) => {
+                const card = document.createElement('article');
+                card.className = `news-card ${idx === 0 ? 'featured' : ''}`;
+                card.setAttribute('data-news', n.id);
+                card.innerHTML = `
+                    <div class="news-image" style="background-image:url('${n.imagem || 'static/logo.png'}');" role="img" aria-label="${n.titulo}"></div>
+                    <div class="news-content">
+                        <span class="news-date">${n.data || ''}</span>
+                        <span class="news-category">${n.categoria || ''}</span>
+                        <h3>${n.titulo}</h3>
+                        <p>${n.resumo || ''}</p>
+                        <a href="#" class="news-link">Ler mais →</a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            attachNewsModalEvents();
+        }
+
+        function attachNewsModalEvents() {
+            document.querySelectorAll('.news-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('news-link')) e.preventDefault();
+                    const newsId = card.getAttribute('data-news');
+                    const news = noticiasData.find(n => n.id == newsId);
+                    if (news) openNewsModal(news);
+                });
+            });
+        }
+
+        function openNewsModal(news) {
+            document.querySelector('.news-modal-title').textContent = news.titulo;
+            document.querySelector('.news-modal-date').textContent = news.data || '';
+            document.querySelector('.news-modal-category').textContent = news.categoria || '';
+            document.querySelector('.news-modal-image').style.backgroundImage = `url('${news.imagem || 'static/logo.png'}')`;
+            document.querySelector('.news-modal-text').innerHTML = news.conteudo || '';
+            document.getElementById('newsModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        document.getElementById('newsModalClose').addEventListener('click', () => {
+            document.getElementById('newsModal').classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        // ========== CARREGAR CONFIGURAÇÕES PARA CONTACTO ==========
+        async function loadContactConfig() {
+            try {
+                const cfg = await fetch('/api/config').then(r => r.json());
+                document.querySelector('.contact-details a[href^="https://wa.me"]').href = `https://wa.me/${cfg.whatsapp?.replace(/\D/g,'')}`;
+                document.querySelector('.contact-details a[href^="mailto"]').textContent = cfg.email || 'benga@geral.co.mz';
+                document.querySelector('.contact-details p').textContent = cfg.localizacao || 'Massingirine, Nacala-a-Velha, Moçambique';
+            } catch (e) {}
+        }
+
+        // ========== NAVEGAÇÃO ==========
+        const navbar = document.getElementById('navbar');
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 100) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
+        });
+
+        // Destaque do link ativo
+        const sections = document.querySelectorAll('section[id]');
+        function highlightNavigation() {
+            const scrollY = window.pageYOffset;
+            sections.forEach(section => {
+                const sectionHeight = section.offsetHeight;
+                const sectionTop = section.offsetTop - 100;
+                const sectionId = section.getAttribute('id');
+                const navLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
+                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                    navLink?.classList.add('active');
+                } else {
+                    navLink?.classList.remove('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', highlightNavigation);
+
+        // Rolagem suave
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+            });
+        });
+
+        // Botões de rolagem horizontal
+        function scrollLeft(el) { if (el) el.scrollBy({ left: -300, behavior: 'smooth' }); }
+        function scrollRight(el) { if (el) el.scrollBy({ left: 300, behavior: 'smooth' }); }
+        document.getElementById('playersScrollLeft')?.addEventListener('click', () => scrollLeft(document.getElementById('playersGrid')));
+        document.getElementById('playersScrollRight')?.addEventListener('click', () => scrollRight(document.getElementById('playersGrid')));
+        document.getElementById('galleryScrollLeft')?.addEventListener('click', () => scrollLeft(document.getElementById('galleryGrid')));
+        document.getElementById('galleryScrollRight')?.addEventListener('click', () => scrollRight(document.getElementById('galleryGrid')));
+
+        // Botão voltar ao topo
+        const scrollTopBtn = document.createElement('button');
+        scrollTopBtn.className = 'scroll-to-top';
+        scrollTopBtn.innerHTML = '↑';
+        scrollTopBtn.setAttribute('aria-label', 'Voltar ao topo');
+        scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        document.body.appendChild(scrollTopBtn);
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 500) scrollTopBtn.classList.add('visible');
+            else scrollTopBtn.classList.remove('visible');
+        });
+
+        // Animações de entrada
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.activity-card, .event-item, .news-card, .mvv-card, .gallery-item, .statement-card, .testimonial-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            observer.observe(el);
+        });
+
+        // ========== INICIALIZAÇÃO ==========
+        window.addEventListener('DOMContentLoaded', async () => {
+            await Promise.all([
+                renderActivities(),
+                renderDirectoria(),
+                renderEventos(),
+                renderJogadores(),
+                renderDeclaracoes(),
+                renderGaleria(),
+                renderNoticias(),
+                loadContactConfig()
+            ]);
+            highlightNavigation();
+        });
+    </script>
+</body>
+</html>

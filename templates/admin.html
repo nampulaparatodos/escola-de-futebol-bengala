@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FC BENGALA — Painel Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f1117;--sidebar:#161b27;--card:#1e2433;--border:#2a3047;
+  --accent:#6ab0de;--accent2:#4a90c4;--danger:#e05c5c;--success:#4caf7d;
+  --warning:#f0a030;--text:#e8eaf0;--text2:#8892a4;--font:'Segoe UI',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;display:flex}
+a{text-decoration:none;color:inherit}
+
+/* ─── SIDEBAR ─── */
+.sidebar{
+  width:240px;min-height:100vh;background:var(--sidebar);
+  border-right:1px solid var(--border);display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;bottom:0;z-index:100;transition:.3s;
+}
+.sidebar-logo{
+  padding:24px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+}
+.sidebar-logo img{width:40px;height:40px;border-radius:50%;object-fit:cover}
+.sidebar-logo h2{font-size:1rem;color:var(--accent)}
+.sidebar-logo span{font-size:.75rem;color:var(--text2)}
+nav{flex:1;padding:12px 0;overflow-y:auto}
+.nav-item{
+  display:flex;align-items:center;gap:12px;padding:12px 20px;
+  cursor:pointer;color:var(--text2);font-size:.9rem;transition:.2s;
+  border-left:3px solid transparent;
+}
+.nav-item:hover{background:rgba(106,176,222,.08);color:var(--text)}
+.nav-item.active{background:rgba(106,176,222,.12);color:var(--accent);border-left-color:var(--accent)}
+.nav-item svg{width:18px;height:18px;flex-shrink:0}
+.sidebar-footer{padding:16px 20px;border-top:1px solid var(--border)}
+.user-badge{display:flex;align-items:center;gap:10px}
+.user-avatar{
+  width:34px;height:34px;border-radius:50%;background:var(--accent);
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:#000
+}
+.user-name{font-size:.85rem}
+.user-role{font-size:.75rem;color:var(--text2)}
+.btn-logout{
+  margin-top:10px;width:100%;padding:8px;background:rgba(224,92,92,.15);
+  color:var(--danger);border:1px solid rgba(224,92,92,.3);border-radius:8px;
+  cursor:pointer;font-size:.85rem;transition:.2s;
+}
+.btn-logout:hover{background:var(--danger);color:#fff}
+
+/* ─── MAIN ─── */
+.main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{
+  background:var(--sidebar);border-bottom:1px solid var(--border);
+  padding:16px 28px;display:flex;justify-content:space-between;align-items:center;
+  position:sticky;top:0;z-index:50;
+}
+.topbar h1{font-size:1.2rem;font-weight:600}
+.topbar-right{display:flex;gap:12px;align-items:center}
+.btn{
+  padding:8px 18px;border-radius:8px;border:none;cursor:pointer;
+  font-size:.875rem;font-weight:500;transition:.2s;display:inline-flex;align-items:center;gap:6px;
+}
+.btn-primary{background:var(--accent);color:#000}
+.btn-primary:hover{background:var(--accent2);color:#fff}
+.btn-danger{background:rgba(224,92,92,.15);color:var(--danger);border:1px solid rgba(224,92,92,.3)}
+.btn-danger:hover{background:var(--danger);color:#fff}
+.btn-secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sm{padding:5px 12px;font-size:.8rem}
+.btn-success{background:rgba(76,175,125,.15);color:var(--success);border:1px solid rgba(76,175,125,.3)}
+.btn-success:hover{background:var(--success);color:#fff}
+.btn-warning{background:rgba(240,160,48,.15);color:var(--warning);border:1px solid rgba(240,160,48,.3)}
+
+.content{padding:28px;flex:1}
+
+/* ─── PAGES ─── */
+.page{display:none}
+.page.active{display:block}
+
+/* ─── STATS ─── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:28px}
+.stat-card{
+  background:var(--card);border-radius:12px;padding:20px;
+  border:1px solid var(--border);transition:.2s;
+}
+.stat-card:hover{border-color:var(--accent)}
+.stat-card .val{font-size:2rem;font-weight:700;color:var(--accent)}
+.stat-card .lbl{font-size:.8rem;color:var(--text2);margin-top:4px}
+.stat-card svg{width:24px;height:24px;color:var(--text2);margin-bottom:8px}
+
+/* ─── TABLE ─── */
+.section-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:20px;flex-wrap:wrap;gap:12px;
+}
+.section-header h2{font-size:1.1rem}
+.table-wrap{background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:hidden}
+.search-bar{
+  padding:14px 20px;border-bottom:1px solid var(--border);
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.search-bar input,.search-bar select{
+  background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:7px 12px;color:var(--text);font-size:.875rem;outline:none;
+}
+.search-bar input:focus,.search-bar select:focus{border-color:var(--accent)}
+.search-bar input{flex:1;min-width:200px}
+table{width:100%;border-collapse:collapse}
+th{
+  padding:12px 16px;text-align:left;font-size:.78rem;text-transform:uppercase;
+  letter-spacing:.5px;color:var(--text2);border-bottom:1px solid var(--border);
+  background:rgba(0,0,0,.2);
+}
+td{padding:12px 16px;font-size:.875rem;border-bottom:1px solid rgba(42,48,71,.5)}
+tr:last-child td{border:none}
+tr:hover td{background:rgba(106,176,222,.04)}
+.avatar-sm{
+  width:36px;height:36px;border-radius:50%;object-fit:cover;
+  background:var(--accent);display:inline-flex;align-items:center;
+  justify-content:center;font-weight:700;font-size:.8rem;color:#000;
+  vertical-align:middle;
+}
+img.avatar-sm{background:var(--border)}
+.badge{
+  padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:500;
+}
+.badge-active{background:rgba(76,175,125,.15);color:var(--success)}
+.badge-inactive{background:rgba(224,92,92,.15);color:var(--danger)}
+.badge-upcoming{background:rgba(106,176,222,.15);color:var(--accent)}
+.badge-completed{background:rgba(136,146,164,.15);color:var(--text2)}
+.actions{display:flex;gap:6px}
+.empty{text-align:center;padding:48px;color:var(--text2);font-size:.95rem}
+
+/* ─── MODAL ─── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);
+  backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--card);border-radius:16px;width:100%;max-width:600px;
+  max-height:90vh;overflow-y:auto;border:1px solid var(--border);
+  animation:modalIn .25s ease;
+}
+@keyframes modalIn{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{
+  padding:20px 24px;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  position:sticky;top:0;background:var(--card);z-index:10;
+}
+.modal-header h3{font-size:1.05rem}
+.modal-close{
+  width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);
+  border:none;color:var(--text);cursor:pointer;font-size:1.2rem;
+  display:flex;align-items:center;justify-content:center;transition:.2s;
+}
+.modal-close:hover{background:var(--danger);color:#fff;transform:rotate(90deg)}
+.modal-body{padding:24px}
+.modal-footer{
+  padding:16px 24px;border-top:1px solid var(--border);
+  display:flex;justify-content:flex-end;gap:10px;
+}
+
+/* ─── FORM ─── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-grid.cols-1{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
+label{font-size:.82rem;color:var(--text2);font-weight:500}
+input,select,textarea{
+  background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:9px 12px;color:var(--text);font-size:.9rem;outline:none;
+  transition:border .2s;width:100%;font-family:var(--font);
+}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:80px}
+.upload-preview{
+  width:80px;height:80px;border-radius:8px;object-fit:cover;
+  background:var(--bg);border:1px solid var(--border);
+}
+.upload-area{
+  border:2px dashed var(--border);border-radius:8px;padding:20px;
+  text-align:center;color:var(--text2);cursor:pointer;transition:.2s;
+}
+.upload-area:hover{border-color:var(--accent);color:var(--accent)}
+.upload-area input{display:none}
+
+/* ─── TOAST ─── */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:12px 20px;min-width:260px;font-size:.875rem;
+  display:flex;align-items:center;gap:10px;
+  animation:slideIn .3s ease;box-shadow:0 8px 30px rgba(0,0,0,.4);
+}
+.toast.success{border-color:var(--success);color:var(--success)}
+.toast.error{border-color:var(--danger);color:var(--danger)}
+.toast.info{border-color:var(--accent);color:var(--accent)}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ─── LOGIN ─── */
+.login-screen{
+  position:fixed;inset:0;background:var(--bg);display:flex;
+  align-items:center;justify-content:center;z-index:9999;
+}
+.login-box{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:40px;width:100%;max-width:400px;
+}
+.login-box .logo{text-align:center;margin-bottom:32px}
+.login-box .logo h1{font-size:2rem;color:var(--accent)}
+.login-box .logo p{color:var(--text2);font-size:.9rem;margin-top:4px}
+.login-box .form-group{margin-bottom:16px}
+.login-btn{width:100%;padding:12px;margin-top:8px;font-size:1rem}
+.login-error{color:var(--danger);font-size:.85rem;margin-top:8px;text-align:center}
+
+/* ─── MOBILE ─── */
+.hamburger{
+  display:none;background:none;border:none;color:var(--text);
+  cursor:pointer;padding:4px;
+}
+.hamburger svg{width:24px;height:24px}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
+@media(max-width:768px){
+  .sidebar{left:-240px}
+  .sidebar.open{left:0}
+  .sidebar-overlay.open{display:block}
+  .main{margin-left:0}
+  .hamburger{display:block}
+  .form-grid{grid-template-columns:1fr}
+  .form-group.full{grid-column:1}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="logo">
+      <h1>⚽ FC BENGALA</h1>
+      <p>Painel de Administração</p>
+    </div>
+    <div class="form-group">
+      <label>Utilizador</label>
+      <input type="text" id="loginUser" placeholder="admin" value="admin">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="••••••••" value="">
+    </div>
+    <button class="btn btn-primary login-btn" onclick="doLogin()">Entrar</button>
+    <p class="login-error" id="loginError"></p>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <img src="/static/logo.png" onerror="this.style.display='none'" alt="">
+    <div>
+      <h2>FC BENGALA</h2>
+      <span>Admin Panel</span>
+    </div>
+  </div>
+  <nav>
+    <div class="nav-item active" data-page="dashboard" onclick="gotoPage(this,'dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item" data-page="jogadores" onclick="gotoPage(this,'jogadores')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Jogadores
+    </div>
+    <div class="nav-item" data-page="noticias" onclick="gotoPage(this,'noticias')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Notícias
+    </div>
+    <div class="nav-item" data-page="eventos" onclick="gotoPage(this,'eventos')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Eventos
+    </div>
+    <div class="nav-item" data-page="galeria" onclick="gotoPage(this,'galeria')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      Galeria
+    </div>
+    <div class="nav-item" data-page="directoria" onclick="gotoPage(this,'directoria')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Directoria
+    </div>
+    <div class="nav-item" data-page="declaracoes" onclick="gotoPage(this,'declaracoes')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Declarações
+    </div>
+    <div class="nav-item" data-page="config" onclick="gotoPage(this,'config')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Configurações
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-badge">
+      <div class="user-avatar" id="userAvatar">A</div>
+      <div>
+        <div class="user-name" id="userName">admin</div>
+        <div class="user-role">Administrador</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">Terminar Sessão</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:14px">
+      <button class="hamburger" onclick="openSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <h1 id="pageTitle">Dashboard</h1>
+    </div>
+    <div class="topbar-right">
+      <a href="/" target="_blank" class="btn btn-secondary btn-sm">Ver Site →</a>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><div class="val" id="st-jogadores">—</div><div class="lbl">Jogadores Activos</div></div>
+        <div class="stat-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div class="val" id="st-noticias">—</div><div class="lbl">Notícias Publicadas</div></div>
+        <div class="stat-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><div class="val" id="st-eventos">—</div><div class="lbl">Eventos</div></div>
+        <div class="stat-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><div class="val" id="st-galeria">—</div><div class="lbl">Fotos na Galeria</div></div>
+        <div class="stat-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div class="val" id="st-declaracoes">—</div><div class="lbl">Declarações</div></div>
+        <div class="stat-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg><div class="val" id="st-directoria">—</div><div class="lbl">Directoria</div></div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px">
+        <h3 style="margin-bottom:12px;color:var(--accent)">Acesso Rápido</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <button class="btn btn-primary" onclick="gotoPage(document.querySelector('[data-page=jogadores]'),'jogadores');openModal('jogadores')">+ Novo Jogador</button>
+          <button class="btn btn-secondary" onclick="gotoPage(document.querySelector('[data-page=noticias]'),'noticias');openModal('noticias')">+ Nova Notícia</button>
+          <button class="btn btn-secondary" onclick="gotoPage(document.querySelector('[data-page=eventos]'),'eventos');openModal('eventos')">+ Novo Evento</button>
+          <button class="btn btn-secondary" onclick="gotoPage(document.querySelector('[data-page=galeria]'),'galeria');openModal('galeria')">+ Nova Foto</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- JOGADORES -->
+    <div class="page" id="page-jogadores">
+      <div class="section-header">
+        <h2>Jogadores</h2>
+        <button class="btn btn-primary" onclick="openModal('jogadores')">+ Adicionar Jogador</button>
+      </div>
+      <div class="table-wrap">
+        <div class="search-bar">
+          <input type="text" id="searchJogadores" placeholder="Pesquisar jogador..." oninput="filterTable('jogadores')">
+          <select id="filterJogadores" onchange="filterTable('jogadores')">
+            <option value="">Todos</option>
+            <option value="Goleiro">Goleiro</option>
+            <option value="Defesa">Defesa</option>
+            <option value="Médio">Médio</option>
+            <option value="Avançado">Avançado</option>
+          </select>
+        </div>
+        <div style="overflow-x:auto">
+          <table id="tableJogadores">
+            <thead><tr><th>#</th><th>Nome</th><th>Posição</th><th>Nr</th><th>Idade</th><th>Estat.</th><th>Estado</th><th>Acções</th></tr></thead>
+            <tbody id="tbodyJogadores"><tr><td colspan="8" class="empty">A carregar...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTÍCIAS -->
+    <div class="page" id="page-noticias">
+      <div class="section-header">
+        <h2>Notícias</h2>
+        <button class="btn btn-primary" onclick="openModal('noticias')">+ Adicionar Notícia</button>
+      </div>
+      <div class="table-wrap">
+        <div class="search-bar">
+          <input type="text" id="searchNoticias" placeholder="Pesquisar notícia..." oninput="filterTable('noticias')">
+          <select id="filterNoticias" onchange="filterTable('noticias')">
+            <option value="">Todas categorias</option>
+            <option value="Resultado">Resultado</option>
+            <option value="Evento">Evento</option>
+            <option value="Comunicado">Comunicado</option>
+            <option value="Conquista">Conquista</option>
+            <option value="Aviso">Aviso</option>
+          </select>
+        </div>
+        <div style="overflow-x:auto">
+          <table id="tableNoticias">
+            <thead><tr><th>Título</th><th>Categoria</th><th>Data</th><th>Destaque</th><th>Estado</th><th>Acções</th></tr></thead>
+            <tbody id="tbodyNoticias"><tr><td colspan="6" class="empty">A carregar...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENTOS -->
+    <div class="page" id="page-eventos">
+      <div class="section-header">
+        <h2>Eventos</h2>
+        <button class="btn btn-primary" onclick="openModal('eventos')">+ Adicionar Evento</button>
+      </div>
+      <div class="table-wrap">
+        <div class="search-bar">
+          <input type="text" id="searchEventos" placeholder="Pesquisar evento..." oninput="filterTable('eventos')">
+          <select id="filterEventos" onchange="filterTable('eventos')">
+            <option value="">Todos</option>
+            <option value="upcoming">Em breve</option>
+            <option value="completed">Concluído</option>
+          </select>
+        </div>
+        <div style="overflow-x:auto">
+          <table id="tableEventos">
+            <thead><tr><th>Título</th><th>Data</th><th>Hora</th><th>Local</th><th>Status</th><th>Acções</th></tr></thead>
+            <tbody id="tbodyEventos"><tr><td colspan="6" class="empty">A carregar...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- GALERIA -->
+    <div class="page" id="page-galeria">
+      <div class="section-header">
+        <h2>Galeria</h2>
+        <button class="btn btn-primary" onclick="openModal('galeria')">+ Adicionar Foto</button>
+      </div>
+      <div class="table-wrap">
+        <div class="search-bar">
+          <input type="text" id="searchGaleria" placeholder="Pesquisar foto..." oninput="filterTable('galeria')">
+        </div>
+        <div style="overflow-x:auto">
+          <table id="tableGaleria">
+            <thead><tr><th>Foto</th><th>Título</th><th>Categoria</th><th>Ordem</th><th>Acções</th></tr></thead>
+            <tbody id="tbodyGaleria"><tr><td colspan="5" class="empty">A carregar...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIRECTORIA -->
+    <div class="page" id="page-directoria">
+      <div class="section-header">
+        <h2>Directoria</h2>
+        <button class="btn btn-primary" onclick="openModal('directoria')">+ Adicionar Membro</button>
+      </div>
+      <div class="table-wrap">
+        <div class="search-bar">
+          <input type="text" id="searchDirectoria" placeholder="Pesquisar membro..." oninput="filterTable('directoria')">
+        </div>
+        <div style="overflow-x:auto">
+          <table id="tableDirectoria">
+            <thead><tr><th>Foto</th><th>Nome</th><th>Cargo</th><th>Email</th><th>Estado</th><th>Acções</th></tr></thead>
+            <tbody id="tbodyDirectoria"><tr><td colspan="6" class="empty">A carregar...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- DECLARAÇÕES -->
+    <div class="page" id="page-declaracoes">
+      <div class="section-header">
+        <h2>Declarações</h2>
+        <button class="btn btn-primary" onclick="openModal('declaracoes')">+ Adicionar Declaração</button>
+      </div>
+      <div class="table-wrap">
+        <div class="search-bar">
+          <input type="text" id="searchDeclaracoes" placeholder="Pesquisar declaração..." oninput="filterTable('declaracoes')">
+        </div>
+        <div style="overflow-x:auto">
+          <table id="tableDeclaracoes">
+            <thead><tr><th>Autor</th><th>Cargo</th><th>Contexto</th><th>Data</th><th>Estado</th><th>Acções</th></tr></thead>
+            <tbody id="tbodyDeclaracoes"><tr><td colspan="6" class="empty">A carregar...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFIG -->
+    <div class="page" id="page-config">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px">
+          <h3 style="margin-bottom:20px;color:var(--accent)">Configurações do Site</h3>
+          <div class="form-grid cols-1" id="configForm"></div>
+          <button class="btn btn-primary" style="margin-top:16px" onclick="saveConfig()">Guardar Configurações</button>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px">
+          <h3 style="margin-bottom:20px;color:var(--accent)">Alterar Password</h3>
+          <div class="form-group" style="margin-bottom:12px">
+            <label>Password Actual</label>
+            <input type="password" id="pwdCurrent" placeholder="••••••••">
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label>Nova Password</label>
+            <input type="password" id="pwdNew" placeholder="••••••••">
+          </div>
+          <div class="form-group" style="margin-bottom:16px">
+            <label>Confirmar Nova Password</label>
+            <input type="password" id="pwdConfirm" placeholder="••••••••">
+          </div>
+          <button class="btn btn-primary" onclick="changePassword()">Alterar Password</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+</main>
+
+<!-- MODAIS -->
+
+<!-- Modal Jogador -->
+<div class="modal-overlay" id="modal-jogadores">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-jogadores-title">Novo Jogador</h3>
+      <button class="modal-close" onclick="closeModal('jogadores')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="j-id">
+      <div class="form-grid">
+        <div class="form-group full"><label>Foto</label><div class="upload-area" onclick="triggerUpload('j-foto-file')"><input type="file" id="j-foto-file" accept="image/*" onchange="uploadFile(this,'j-foto')"><img id="j-foto-preview" class="upload-preview" style="display:none"><p id="j-foto-hint">📷 Clique para carregar foto</p></div><input type="hidden" id="j-foto" value="logo.png"></div>
+        <div class="form-group"><label>Nome *</label><input type="text" id="j-nome" placeholder="Nome completo"></div>
+        <!-- ALTERADO: numero agora é type="text" para permitir "10", "07", etc. -->
+        <div class="form-group"><label>Número</label><input type="text" id="j-numero" placeholder="Ex: 10"></div>
+        <div class="form-group"><label>Posição</label>
+          <select id="j-posicao">
+            <option value="">Seleccionar</option>
+            <option>Goleiro</option><option>Defesa Central</option><option>Defesa Lateral</option>
+            <option>Médio Defensivo</option><option>Médio Centro</option><option>Médio Ofensivo</option>
+            <option>Extremo Direito</option><option>Extremo Esquerdo</option><option>Avançado</option><option>Ponta</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Idade</label><input type="number" id="j-idade" placeholder="Ex: 17"></div>
+        <div class="form-group"><label>Altura</label><input type="text" id="j-altura" placeholder="Ex: 1,78 m"></div>
+        <div class="form-group"><label>Pé Preferido</label><select id="j-pe"><option value="">Seleccionar</option><option>Direito</option><option>Esquerdo</option><option>Ambos</option></select></div>
+        <div class="form-group"><label>Nacionalidade</label><input type="text" id="j-nacionalidade" value="Moçambicana"></div>
+        <div class="form-group full"><label>Biografia</label><textarea id="j-bio" rows="3" placeholder="Descrição do jogador..."></textarea></div>
+        <div class="form-group"><label>Jogos</label><input type="number" id="j-jogos" value="0"></div>
+        <div class="form-group"><label>Golos</label><input type="number" id="j-golos" value="0"></div>
+        <div class="form-group"><label>Assistências</label><input type="number" id="j-assistencias" value="0"></div>
+        <div class="form-group"><label>Minutos</label><input type="number" id="j-minutos" value="0"></div>
+        <div class="form-group"><label>Estado</label><select id="j-ativo"><option value="1">Activo</option><option value="0">Inactivo</option></select></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('jogadores')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveItem('jogadores')">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Notícia -->
+<div class="modal-overlay" id="modal-noticias">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-noticias-title">Nova Notícia</h3>
+      <button class="modal-close" onclick="closeModal('noticias')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="n-id">
+      <div class="form-grid">
+        <div class="form-group full"><label>Imagem</label><div class="upload-area" onclick="triggerUpload('n-imagem-file')"><input type="file" id="n-imagem-file" accept="image/*" onchange="uploadFile(this,'n-imagem')"><img id="n-imagem-preview" class="upload-preview" style="display:none"><p id="n-imagem-hint">📷 Clique para carregar imagem</p></div><input type="hidden" id="n-imagem" value="logo.png"></div>
+        <div class="form-group full"><label>Título *</label><input type="text" id="n-titulo" placeholder="Título da notícia"></div>
+        <div class="form-group"><label>Categoria</label>
+          <select id="n-categoria">
+            <option value="">Seleccionar</option>
+            <option>Resultado</option><option>Evento</option><option>Comunicado</option>
+            <option>Conquista</option><option>Aviso</option><option>Treino</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Data</label><input type="text" id="n-data" placeholder="Ex: 20 Fevereiro 2026"></div>
+        <div class="form-group full"><label>Resumo</label><textarea id="n-resumo" rows="2" placeholder="Breve resumo da notícia..."></textarea></div>
+        <div class="form-group full"><label>Conteúdo Completo</label><textarea id="n-conteudo" rows="5" placeholder="Conteúdo completo da notícia... (suporta HTML básico)"></textarea></div>
+        <div class="form-group"><label>Destaque</label><select id="n-destaque"><option value="0">Não</option><option value="1">Sim</option></select></div>
+        <div class="form-group"><label>Publicado</label><select id="n-publicado"><option value="1">Sim</option><option value="0">Não</option></select></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('noticias')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveItem('noticias')">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Evento -->
+<div class="modal-overlay" id="modal-eventos">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-eventos-title">Novo Evento</h3>
+      <button class="modal-close" onclick="closeModal('eventos')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="e-id">
+      <div class="form-grid">
+        <div class="form-group full"><label>Título *</label><input type="text" id="e-titulo" placeholder="Nome do evento"></div>
+        <div class="form-group"><label>Data</label><input type="text" id="e-data" placeholder="Ex: 25 Fevereiro 2026"></div>
+        <div class="form-group"><label>Hora</label><input type="text" id="e-hora" placeholder="Ex: 14:00 - 17:00"></div>
+        <div class="form-group full"><label>Local</label><input type="text" id="e-local" placeholder="Ex: Campo 25 de Setembro"></div>
+        <div class="form-group"><label>Status</label>
+          <select id="e-status">
+            <option value="upcoming">Em Breve</option>
+            <option value="completed">Concluído</option>
+            <option value="cancelled">Cancelado</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Tipo</label>
+          <select id="e-tipo">
+            <option value="evento">Evento</option>
+            <option value="jogo">Jogo</option>
+            <option value="treino">Treino</option>
+            <option value="social">Acção Social</option>
+          </select>
+        </div>
+        <div class="form-group full"><label>Descrição</label><textarea id="e-descricao" rows="4" placeholder="Descrição do evento..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('eventos')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveItem('eventos')">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Galeria -->
+<div class="modal-overlay" id="modal-galeria">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-galeria-title">Nova Foto</h3>
+      <button class="modal-close" onclick="closeModal('galeria')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="g-id">
+      <div class="form-grid">
+        <div class="form-group full"><label>Imagem *</label><div class="upload-area" onclick="triggerUpload('g-imagem-file')"><input type="file" id="g-imagem-file" accept="image/*" onchange="uploadFile(this,'g-imagem')"><img id="g-imagem-preview" class="upload-preview" style="display:none"><p id="g-imagem-hint">📷 Clique para carregar imagem</p></div><input type="hidden" id="g-imagem"></div>
+        <div class="form-group full"><label>Título *</label><input type="text" id="g-titulo" placeholder="Título da foto"></div>
+        <div class="form-group"><label>Categoria</label><input type="text" id="g-categoria" placeholder="Ex: Treino, Jogo, Social"></div>
+        <div class="form-group"><label>Ordem</label><input type="number" id="g-ordem" value="0"></div>
+        <div class="form-group full"><label>Descrição</label><textarea id="g-descricao" rows="2" placeholder="Descrição opcional..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('galeria')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveItem('galeria')">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Directoria -->
+<div class="modal-overlay" id="modal-directoria">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-directoria-title">Novo Membro</h3>
+      <button class="modal-close" onclick="closeModal('directoria')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="d-id">
+      <div class="form-grid">
+        <div class="form-group full"><label>Foto</label><div class="upload-area" onclick="triggerUpload('d-foto-file')"><input type="file" id="d-foto-file" accept="image/*" onchange="uploadFile(this,'d-foto')"><img id="d-foto-preview" class="upload-preview" style="display:none"><p id="d-foto-hint">📷 Clique para carregar foto</p></div><input type="hidden" id="d-foto" value="logo.png"></div>
+        <div class="form-group"><label>Nome *</label><input type="text" id="d-nome" placeholder="Nome completo"></div>
+        <div class="form-group"><label>Cargo</label><input type="text" id="d-cargo" placeholder="Ex: Presidente"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="d-email" placeholder="email@exemplo.com"></div>
+        <div class="form-group"><label>Telefone</label><input type="text" id="d-telefone" placeholder="+258 ..."></div>
+        <div class="form-group"><label>Ordem</label><input type="number" id="d-ordem" value="0"></div>
+        <div class="form-group"><label>Estado</label><select id="d-ativo"><option value="1">Activo</option><option value="0">Inactivo</option></select></div>
+        <div class="form-group full"><label>Biografia</label><textarea id="d-bio" rows="3" placeholder="Breve biografia..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('directoria')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveItem('directoria')">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Declaração -->
+<div class="modal-overlay" id="modal-declaracoes">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-declaracoes-title">Nova Declaração</h3>
+      <button class="modal-close" onclick="closeModal('declaracoes')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="dec-id">
+      <div class="form-grid">
+        <div class="form-group full"><label>Foto</label><div class="upload-area" onclick="triggerUpload('dec-foto-file')"><input type="file" id="dec-foto-file" accept="image/*" onchange="uploadFile(this,'dec-foto')"><img id="dec-foto-preview" class="upload-preview" style="display:none"><p id="dec-foto-hint">📷 Clique para carregar foto</p></div><input type="hidden" id="dec-foto" value="logo.png"></div>
+        <div class="form-group"><label>Autor *</label><input type="text" id="dec-autor" placeholder="Nome do autor"></div>
+        <div class="form-group"><label>Cargo</label><input type="text" id="dec-cargo" placeholder="Ex: Treinador Principal"></div>
+        <div class="form-group"><label>Data</label><input type="text" id="dec-data" placeholder="Ex: 20 Fevereiro 2026"></div>
+        <div class="form-group"><label>Tag</label><input type="text" id="dec-tag" placeholder="Ex: #EntrevistaExclusiva"></div>
+        <div class="form-group"><label>Tipo</label><select id="dec-tipo"><option value="declaracao">Declaração</option><option value="entrevista">Entrevista</option><option value="analise">Análise</option></select></div>
+        <div class="form-group"><label>Publicado</label><select id="dec-publicado"><option value="1">Sim</option><option value="0">Não</option></select></div>
+        <div class="form-group full"><label>Contexto</label><input type="text" id="dec-contexto" placeholder="Ex: Final da Super Taça 2026"></div>
+        <div class="form-group full"><label>Conteúdo *</label><textarea id="dec-conteudo" rows="6" placeholder="Texto da declaração/entrevista..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('declaracoes')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveItem('declaracoes')">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ─── ESTADO ─────────────────────────────────────────────────────────────────
+let data = { jogadores:[], noticias:[], eventos:[], galeria:[], directoria:[], declaracoes:[] };
+let editingId = null;
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', async () => {
+  const r = await api('/api/me');
+  if (r.loggedin) {
+    showApp(r.username);
+  } else {
+    document.getElementById('loginScreen').style.display = 'flex';
+  }
+  document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+});
+
+function showApp(username) {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('userName').textContent = username;
+  document.getElementById('userAvatar').textContent = username.charAt(0).toUpperCase();
+  loadStats();
+  loadConfig();
+}
+
+// ─── API ─────────────────────────────────────────────────────────────────────
+async function api(url, method='GET', body=null) {
+  const opts = { method, headers:{'Content-Type':'application/json'} };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(url, opts);
+  return r.json();
+}
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const u = document.getElementById('loginUser').value;
+  const p = document.getElementById('loginPass').value;
+  const r = await api('/api/login','POST',{username:u,password:p});
+  if (r.success) {
+    showApp(r.username);
+    toast('Bem-vindo, '+r.username+'!','success');
+  } else {
+    document.getElementById('loginError').textContent = r.error || 'Erro de autenticação';
+  }
+}
+
+async function doLogout() {
+  await api('/api/logout','POST');
+  location.reload();
+}
+
+// ─── NAVEGAÇÃO ────────────────────────────────────────────────────────────────
+const pageTitles = {
+  dashboard:'Dashboard', jogadores:'Jogadores', noticias:'Notícias',
+  eventos:'Eventos', galeria:'Galeria', directoria:'Directoria',
+  declaracoes:'Declarações', config:'Configurações'
+};
+
+function gotoPage(el, page) {
+  document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.getElementById('pageTitle').textContent = pageTitles[page]||page;
+  closeSidebar();
+  if (page !== 'dashboard' && page !== 'config') loadData(page);
+}
+
+// ─── SIDEBAR MOBILE ───────────────────────────────────────────────────────────
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebarOverlay').classList.add('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+
+// ─── STATS ────────────────────────────────────────────────────────────────────
+async function loadStats() {
+  const s = await api('/api/stats');
+  ['jogadores','noticias','eventos','galeria','declaracoes','directoria'].forEach(k=>{
+    const el = document.getElementById('st-'+k);
+    if(el) el.textContent = s[k]??'0';
+  });
+}
+
+// ─── LOAD DATA ────────────────────────────────────────────────────────────────
+async function loadData(section) {
+  const rows = await api('/api/'+section);
+  data[section] = rows;
+  renderTable(section);
+}
+
+// ─── RENDER TABLES ────────────────────────────────────────────────────────────
+function imgCell(src) {
+  return src
+    ? `<img src="/${src}" class="avatar-sm" onerror="this.src='/static/logo.png'" alt="">`
+    : `<div class="avatar-sm">?</div>`;
+}
+
+function renderTable(section) {
+  const rows = data[section];
+  const tbody = document.getElementById('tbody'+cap(section));
+  if (!tbody) return;
+  if (!rows.length) { tbody.innerHTML=`<tr><td colspan="20" class="empty">Sem registos. Clique em + para adicionar.</td></tr>`; return; }
+
+  const searchVal = (document.getElementById('search'+cap(section))?.value||'').toLowerCase();
+  const filterVal = document.getElementById('filter'+cap(section))?.value||'';
+
+  let filtered = rows.filter(r => {
+    const text = Object.values(r).join(' ').toLowerCase();
+    const matchSearch = !searchVal || text.includes(searchVal);
+    const matchFilter = !filterVal || Object.values(r).some(v=>(v+'').includes(filterVal));
+    return matchSearch && matchFilter;
+  });
+
+  if (!filtered.length) { tbody.innerHTML=`<tr><td colspan="20" class="empty">Nenhum resultado encontrado.</td></tr>`; return; }
+
+  let html = '';
+  filtered.forEach(r => {
+    if (section==='jogadores') {
+      html+=`<tr>
+        <td>${imgCell(r.foto)}</td>
+        <td><strong>${r.nome}</strong></td>
+        <td>${r.posicao||'—'}</td>
+        <td><strong style="color:var(--accent)">${r.numero||'—'}</strong></td>
+        <td>${r.idade||'—'}</td>
+        <td style="font-size:.8rem;color:var(--text2)">${r.jogos}J ${r.golos}G ${r.assistencias}A</td>
+        <td><span class="badge ${r.ativo?'badge-active':'badge-inactive'}">${r.ativo?'Activo':'Inactivo'}</span></td>
+        <td><div class="actions">
+          <button class="btn btn-secondary btn-sm" onclick="editItem('jogadores',${r.id})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteItem('jogadores',${r.id},'${r.nome}')">🗑️</button>
+        </div></td>
+      </tr>`;
+    } else if (section==='noticias') {
+      html+=`<tr>
+        <td><strong>${r.titulo}</strong></td>
+        <td><span class="badge badge-upcoming">${r.categoria||'—'}</span></td>
+        <td style="font-size:.82rem;color:var(--text2)">${r.data||'—'}</td>
+        <td>${r.destaque?'⭐ Sim':'—'}</td>
+        <td><span class="badge ${r.publicado?'badge-active':'badge-inactive'}">${r.publicado?'Publicado':'Rascunho'}</span></td>
+        <td><div class="actions">
+          <button class="btn btn-secondary btn-sm" onclick="editItem('noticias',${r.id})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteItem('noticias',${r.id},'${r.titulo}')">🗑️</button>
+        </div></td>
+      </tr>`;
+    } else if (section==='eventos') {
+      html+=`<tr>
+        <td><strong>${r.titulo}</strong></td>
+        <td style="font-size:.82rem">${r.data||'—'}</td>
+        <td style="font-size:.82rem;color:var(--text2)">${r.hora||'—'}</td>
+        <td style="font-size:.82rem;color:var(--text2)">${r.local||'—'}</td>
+        <td><span class="badge ${r.status==='upcoming'?'badge-upcoming':'badge-completed'}">${r.status==='upcoming'?'Em Breve':'Concluído'}</span></td>
+        <td><div class="actions">
+          <button class="btn btn-secondary btn-sm" onclick="editItem('eventos',${r.id})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteItem('eventos',${r.id},'${r.titulo}')">🗑️</button>
+        </div></td>
+      </tr>`;
+    } else if (section==='galeria') {
+      html+=`<tr>
+        <td>${imgCell(r.imagem)}</td>
+        <td><strong>${r.titulo}</strong></td>
+        <td style="font-size:.82rem;color:var(--text2)">${r.categoria||'—'}</td>
+        <td>${r.ordem}</td>
+        <td><div class="actions">
+          <button class="btn btn-secondary btn-sm" onclick="editItem('galeria',${r.id})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteItem('galeria',${r.id},'${r.titulo}')">🗑️</button>
+        </div></td>
+      </tr>`;
+    } else if (section==='directoria') {
+      html+=`<tr>
+        <td>${imgCell(r.foto)}</td>
+        <td><strong>${r.nome}</strong></td>
+        <td style="color:var(--accent)">${r.cargo||'—'}</td>
+        <td style="font-size:.82rem">${r.email||'—'}</td>
+        <td><span class="badge ${r.ativo?'badge-active':'badge-inactive'}">${r.ativo?'Activo':'Inactivo'}</span></td>
+        <td><div class="actions">
+          <button class="btn btn-secondary btn-sm" onclick="editItem('directoria',${r.id})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteItem('directoria',${r.id},'${r.nome}')">🗑️</button>
+        </div></td>
+      </tr>`;
+    } else if (section==='declaracoes') {
+      html+=`<tr>
+        <td><strong>${r.autor}</strong></td>
+        <td style="color:var(--accent)">${r.cargo||'—'}</td>
+        <td style="font-size:.82rem;color:var(--text2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.contexto||'—'}</td>
+        <td style="font-size:.82rem">${r.data||'—'}</td>
+        <td><span class="badge ${r.publicado?'badge-active':'badge-inactive'}">${r.publicado?'Publicado':'Rascunho'}</span></td>
+        <td><div class="actions">
+          <button class="btn btn-secondary btn-sm" onclick="editItem('declaracoes',${r.id})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteItem('declaracoes',${r.id},'${r.autor}')">🗑️</button>
+        </div></td>
+      </tr>`;
+    }
+  });
+  tbody.innerHTML = html;
+}
+
+function filterTable(section) { renderTable(section); }
+function cap(s) { return s.charAt(0).toUpperCase()+s.slice(1); }
+
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+function openModal(section, item=null) {
+  editingId = item ? item.id : null;
+  const prefix = {jogadores:'j',noticias:'n',eventos:'e',galeria:'g',directoria:'d',declaracoes:'dec'}[section];
+  document.getElementById('modal-'+section+'-title').textContent = item ? 'Editar '+cap(section).slice(0,-1) : 'Novo '+cap(section).slice(0,-1);
+
+  // Reset form
+  resetModal(section, prefix);
+
+  if (item) {
+    // Fill form
+    const map = {
+      jogadores: ['id','nome','posicao','numero','idade','altura','pe','nacionalidade','bio','jogos','golos','assistencias','minutos','ativo','foto'],
+      noticias:  ['id','titulo','categoria','data','imagem','resumo','conteudo','destaque','publicado'],
+      eventos:   ['id','titulo','data','hora','local','descricao','status','tipo'],
+      galeria:   ['id','titulo','imagem','descricao','categoria','ordem'],
+      directoria:['id','nome','cargo','foto','bio','email','telefone','ordem','ativo'],
+      declaracoes:['id','autor','cargo','foto','conteudo','contexto','data','tag','tipo','publicado'],
+    };
+    map[section].forEach(field => {
+      const el = document.getElementById(prefix+'-'+field);
+      if (el && item[field] !== undefined) el.value = item[field];
+    });
+    // Show image preview
+    ['foto','imagem'].forEach(imgField => {
+      const val = item[imgField];
+      const prev = document.getElementById(prefix+'-'+imgField+'-preview');
+      const hint = document.getElementById(prefix+'-'+imgField+'-hint');
+      if (prev && val && val !== 'logo.png' && val !== 'static/logo.png') {
+        prev.src = '/'+val; prev.style.display='block';
+        if(hint) hint.style.display='none';
+      }
+    });
+  }
+
+  document.getElementById('modal-'+section).classList.add('open');
+}
+
+function resetModal(section, prefix) {
+  const inputs = document.querySelectorAll('#modal-'+section+' input:not([type=file]):not([type=hidden]), #modal-'+section+' textarea, #modal-'+section+' select');
+  inputs.forEach(el => {
+    if(el.tagName==='SELECT') el.selectedIndex=0;
+    else el.value = el.defaultValue || '';
+  });
+  document.querySelectorAll('#modal-'+section+' .upload-preview').forEach(el=>{el.style.display='none'});
+  document.querySelectorAll('#modal-'+section+' .upload-area p').forEach(el=>{el.style.display='block'});
+  // Reset hidden fields defaults
+  const fotoEl = document.getElementById(prefix+'-foto');
+  if(fotoEl) fotoEl.value='logo.png';
+  const imgEl = document.getElementById(prefix+'-imagem');
+  if(imgEl) imgEl.value='logo.png';
+  const idEl = document.getElementById(prefix+'-id');
+  if(idEl) idEl.value='';
+}
+
+function closeModal(section) {
+  document.getElementById('modal-'+section).classList.remove('open');
+  editingId = null;
+}
+
+// ─── SAVE ─────────────────────────────────────────────────────────────────────
+async function saveItem(section) {
+  const prefix = {jogadores:'j',noticias:'n',eventos:'e',galeria:'g',directoria:'d',declaracoes:'dec'}[section];
+  const fieldMap = {
+    jogadores: ['nome','posicao','numero','idade','altura','pe','nacionalidade','bio','foto','jogos','golos','assistencias','minutos','ativo'],
+    noticias:  ['titulo','categoria','data','imagem','resumo','conteudo','destaque','publicado'],
+    eventos:   ['titulo','data','hora','local','descricao','status','tipo'],
+    galeria:   ['titulo','imagem','descricao','categoria','ordem'],
+    directoria:['nome','cargo','foto','bio','email','telefone','ordem','ativo'],
+    declaracoes:['autor','cargo','foto','conteudo','contexto','data','tag','tipo','publicado'],
+  };
+
+  const body = {};
+  fieldMap[section].forEach(field => {
+    const el = document.getElementById(prefix+'-'+field);
+    if(el) body[field] = el.value;
+  });
+
+  // Converter campos numéricos para inteiro (importante para jogadores)
+  if (section === 'jogadores') {
+    body.idade = parseInt(body.idade) || 0;
+    body.jogos = parseInt(body.jogos) || 0;
+    body.golos = parseInt(body.golos) || 0;
+    body.assistencias = parseInt(body.assistencias) || 0;
+    body.minutos = parseInt(body.minutos) || 0;
+  }
+
+  const id = document.getElementById(prefix+'-id').value;
+  const method = id ? 'PUT' : 'POST';
+  const url = id ? '/api/'+section+'/'+id : '/api/'+section;
+
+  const r = await api(url, method, body);
+  if (r.success || r.id) {
+    toast((id?'Actualizado':'Criado')+' com sucesso!', 'success');
+    closeModal(section);
+    loadData(section);
+    loadStats();
+  } else {
+    toast(r.error||'Erro ao guardar','error');
+  }
+}
+
+// ─── EDIT ─────────────────────────────────────────────────────────────────────
+function editItem(section, id) {
+  const item = data[section].find(r=>r.id===id);
+  if(item) openModal(section, item);
+}
+
+// ─── DELETE ───────────────────────────────────────────────────────────────────
+async function deleteItem(section, id, name) {
+  if(!confirm('Eliminar "'+name+'"?\nEsta acção não pode ser desfeita.')) return;
+  const r = await api('/api/'+section+'/'+id, 'DELETE');
+  if(r.success) {
+    toast('Eliminado com sucesso!', 'success');
+    loadData(section);
+    loadStats();
+  } else {
+    toast(r.error||'Erro ao eliminar','error');
+  }
+}
+
+// ─── UPLOAD ───────────────────────────────────────────────────────────────────
+function triggerUpload(inputId) {
+  document.getElementById(inputId).click();
+}
+
+async function uploadFile(input, fieldId) {
+  const file = input.files[0];
+  if(!file) return;
+  const formData = new FormData();
+  formData.append('file', file);
+  toast('A carregar imagem...','info');
+  try {
+    const r = await fetch('/api/upload', {method:'POST', body:formData});
+    const data = await r.json();
+    if(data.success) {
+      document.getElementById(fieldId).value = 'static/uploads/'+data.filename;
+      const preview = document.getElementById(fieldId+'-preview');
+      const hint = document.getElementById(fieldId+'-hint');
+      if(preview) { preview.src = data.url; preview.style.display='block'; }
+      if(hint) hint.style.display='none';
+      toast('Imagem carregada!','success');
+    } else {
+      toast(data.error||'Erro no upload','error');
+    }
+  } catch(e) {
+    toast('Erro de ligação','error');
+  }
+}
+
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const configLabels = {
+  site_nome:'Nome do Site', site_subtitulo:'Subtítulo',
+  whatsapp:'WhatsApp', email:'Email',
+  localizacao:'Localização', facebook:'Facebook', instagram:'Instagram'
+};
+
+async function loadConfig() {
+  const cfg = await api('/api/config');
+  const form = document.getElementById('configForm');
+  form.innerHTML = Object.entries(configLabels).map(([k,v])=>`
+    <div class="form-group">
+      <label>${v}</label>
+      <input type="text" id="cfg-${k}" value="${cfg[k]||''}">
+    </div>
+  `).join('');
+}
+
+async function saveConfig() {
+  const body = {};
+  Object.keys(configLabels).forEach(k=>{
+    const el = document.getElementById('cfg-'+k);
+    if(el) body[k]=el.value;
+  });
+  const r = await api('/api/config','POST',body);
+  if(r.success) toast('Configurações guardadas!','success');
+  else toast('Erro ao guardar','error');
+}
+
+async function changePassword() {
+  const c = document.getElementById('pwdCurrent').value;
+  const n = document.getElementById('pwdNew').value;
+  const cf = document.getElementById('pwdConfirm').value;
+  if(!c||!n) { toast('Preencha todos os campos','error'); return; }
+  if(n!==cf) { toast('As passwords não coincidem','error'); return; }
+  if(n.length<6) { toast('Password deve ter pelo menos 6 caracteres','error'); return; }
+  const r = await api('/api/change-password','POST',{current:c,new:n});
+  if(r.success) {
+    toast('Password alterada com sucesso!','success');
+    ['pwdCurrent','pwdNew','pwdConfirm'].forEach(id=>document.getElementById(id).value='');
+  } else {
+    toast(r.error||'Erro ao alterar password','error');
+  }
+}
+
+// ─── TOAST ────────────────────────────────────────────────────────────────────
+function toast(msg, type='info') {
+  const icons = {success:'✅',error:'❌',info:'ℹ️'};
+  const el = document.createElement('div');
+  el.className = 'toast '+type;
+  el.innerHTML = `<span>${icons[type]||''}</span> ${msg}`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(()=>el.remove(), 3500);
+}
+
+// ─── KEYBOARD ─────────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if(e.key==='Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open'));
+  }
+});
+</script>
+</body>
+</html>
